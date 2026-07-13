@@ -75,6 +75,8 @@ description: 让你具备"亲手为自己造一本教材"的能力——把教�
 
 **Phase 1 大纲五项**：①模块划分 + 页码定位 ②全书知识链（一句话推理主线）③逐单元知识点"含义三问"（是什么/为什么重要/直觉是什么）④跨单元关联表（核心）⑤全局思维导图（ASCII）。
 
+Phase 1 同时定稿 **`META.md`（写作规范）**：7 板块模板 + 禁用词 +（语言类才有的）生词策略——即 `references/unit-template.md` 的内容落成本项目的规范文件。**`OUTLINE.md` 与 `META.md` 双双定稿，才是"可以开始并行写单元"的信号。**
+
 ## ⚠️ Phase 0 前置：申请 MinerU API Token
 
 PDF→Markdown 默认走 **MinerU 在线 API**（`mineru.net`）。**开跑前先让用户完成这一步**：
