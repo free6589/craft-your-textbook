@@ -93,6 +93,7 @@ PDF→Markdown 默认走 **MinerU 在线 API**（`mineru.net`）。**开跑前�
 
 ## 参考文件（按需加载，不要一次全读）
 
+- **分析源 MD + 设计大纲时（Phase 0.5/1）** → 读 `references/outline-and-analysis.md`（怎么读 MinerU 的 MD、抓 Scope and sequence 总表、切单元、写差异报告、落成 OUTLINE.md 五项）
 - **写单元时** → 读 `references/unit-template.md`（7 板块模板 + 四条设计原则 + 弹药库按学科定制 + 禁用词表）
 - **仅语言类教材（处理生词时）** → 读 `references/vocabulary-strategy.md`（L1-L4 分层 + 三动作）。数学/历史/编程等非语言学科**跳过此文件**——弹药库不含"词汇/音标/生词"维度
 - **审校/教学测试时** → 读 `references/audit-and-testing.md`（五层审计 + L5 教学测试 + 幻觉 gate）
