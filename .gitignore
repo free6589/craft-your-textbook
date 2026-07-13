@@ -1,0 +1,21 @@
+# Python
+__pycache__/
+*.py[cod]
+*.egg-info/
+.venv/
+venv/
+
+# 造书产物 / 中间文件（示例，用户自己造书时按需忽略）
+source-md/
+source-md-teacher/
+*.pdf
+BOOK*.md
+
+# 编辑器 / 系统
+.DS_Store
+.idea/
+.vscode/
+Thumbs.db
+
+# 密钥（务必不要提交）
+.env
