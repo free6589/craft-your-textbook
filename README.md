@@ -48,7 +48,7 @@ git clone https://github.com/xx-hub/craft-your-textbook.git <你的项目>/.clau
 
 ## 二、核心：书是"给 AI 老师读的"
 
-因为学生不读书、只有 AI 老师读书，所以这本"书"的每一个字都要服务于**"AI 老师会怎么用它上课"**，而不是"读者读到这里会有什么感受"。
+因为学生不读书、只有 AI 老师读书，所以这本"书"的每一个字都要服务于\*\*"AI 老师会怎么用它上课"\*\*，而不是"读者读到这里会有什么感受"。
 
 这是最容易犯的根本错误——**把蓝本当成给人读的书来写**：开篇写个吸引读者的钩子（可读者根本不读）、通篇用"你"跟读者对话（可"你"到底指谁？）。
 
@@ -189,6 +189,8 @@ craft-your-textbook/
 
 如果你对造出来的书感到不信任，可以用 [socratic-lens](https://github.com/xx-hub/socratic-lens) 项目对它做测试——把蓝本喂给它，检验 AI 老师是否真的能沿主线教学、不跑题、不幻觉，再决定要不要正式拿去上课。
 
+[socratic-lens](https://github.com/xx-hub/socratic-lens) 项目已内置由本skill制作的为 **七年级上册·教研版** 学生开发的英语书，开箱即测。
+
 <br />
 
 ## 十一、上手 [Socratopia（破卷）](https://www.socratopia.app/r/SCR-FEJXMQ)
@@ -197,3 +199,4 @@ craft-your-textbook/
 
 - **免费用户** → 立即获得 **100 万 Token**
 - **坐馆订阅用户** → 获得 **1 书币**（价值 $3.99）
+
