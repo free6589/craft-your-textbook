@@ -1,0 +1,13 @@
+{
+  "name": "craft-your-textbook",
+  "owner": {
+    "name": "xx-hub"
+  },
+  "plugins": [
+    {
+      "name": "craft-your-textbook",
+      "source": "./",
+      "description": "亲手为自己造一本 AI 苏格拉底老师能上课的教学蓝本（应试特调）。默认师生合版流程，适用任何学科。"
+    }
+  ]
+}

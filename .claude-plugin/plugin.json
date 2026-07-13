@@ -1,0 +1,19 @@
+{
+  "name": "craft-your-textbook",
+  "version": "1.0.0",
+  "description": "亲手为自己造一本 AI 苏格拉底老师能上课的教学蓝本。把教材（PDF）或某领域知识加工成给 AI 老师读的教学 spec——学习者不读书，只跟 AI 老师对话。默认师生合版流程，有教师用书时可直接针对应试。适用任何学科。",
+  "author": {
+    "name": "xx-hub"
+  },
+  "homepage": "https://github.com/xx-hub/craft-your-textbook",
+  "repository": "https://github.com/xx-hub/craft-your-textbook",
+  "license": "MIT",
+  "keywords": [
+    "education",
+    "socratic",
+    "textbook",
+    "pedagogy",
+    "socratopia",
+    "teaching"
+  ]
+}
