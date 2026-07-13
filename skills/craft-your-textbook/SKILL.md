@@ -85,6 +85,12 @@ Phase 1 同时定稿 **`META.md`（写作规范）**：把 `references/unit-temp
 
 PDF→Markdown 默认走 **MinerU 在线 API**（`mineru.net`）。**开跑前先让用户完成这一步**：
 
+0. **定位 skill 脚本目录 + 装依赖**（脚本在 skill 安装目录，不在你的项目里）：
+   ```bash
+   SKILL_DIR=$(dirname "$(find ~/.claude -name SKILL.md -path '*craft-your-textbook*' | head -1)")
+   pip install -r "$SKILL_DIR/scripts/requirements.txt"   # 就一个 requests
+   ```
+   把要用的脚本复制进项目：`cp "$SKILL_DIR/scripts/"*.py <项目根>/scripts/`
 1. 打开 **https://mineru.net** 注册/登录
 2. 进入「API」/ 个人中心，**申请 API Token**（有免费额度，造书够用）
 3. 把 Token 设为环境变量（**切勿硬编码进脚本，会泄漏**）：
@@ -92,7 +98,7 @@ PDF→Markdown 默认走 **MinerU 在线 API**（`mineru.net`）。**开跑前�
    export MINERU_TOKEN="你的token"    # Git Bash / Linux / Mac
    # PowerShell: $env:MINERU_TOKEN="你的token"
    ```
-4. 运行 `python scripts/01_pdf_to_md.py <PDF路径> source-md/`
+4. 运行 `python <项目根>/scripts/01_pdf_to_md.py <PDF路径> source-md/`
 
 > **理科教材**：改 `01_pdf_to_md.py` 里 `ENABLE_FORMULA = True` 保留公式识别。
 > **备选方案**：不想用在线 API，可换本地 `marker-pdf`（先 `pip install marker-pdf`，首次运行会自动下载模型；再 `marker_single input.pdf --output_dir source-md/ --disable-ocr`）——但 MinerU VLM 对扫描版教材版面识别更准，是默认推荐。
@@ -107,13 +113,15 @@ PDF→Markdown 默认走 **MinerU 在线 API**（`mineru.net`）。**开跑前�
 - **交付前拆脚手架 + 质量门** → 读 `references/delivery-checklist.md`（8 类元数据 + 6 项质量门）
 - **易踩的坑** → 读 `references/anti-patterns.md`（反模式速查 + 工程陷阱）
 
-## 可复用脚本
+## 示例脚本（复制进项目再改，不改 skill 原件）
 
-- `scripts/01_pdf_to_md.py` —— Phase 0：MinerU API 把 PDF 转 Markdown。Token 从 `MINERU_TOKEN` 环境变量读，用法 `python 01_pdf_to_md.py <PDF> <输出目录>`。
-- `scripts/merge_book.py` —— 合并所有单元 + 附录为 `BOOK.md`（含目录、Part 分隔、锚点）。**可重跑**：改完单元重跑即可。
-- `scripts/strip_meta_sections.py` —— 删除单元源文件末尾的 `## 📋 自检清单` / `## 📜 版本记录` 板块（Phase 8）。删完必须重跑 `merge_book.py`。
+`scripts/` 里三个脚本是**示例模板**，不是即插即用的通用工具。造书时的正确用法：**把用得到的脚本复制进你的造书项目**（约定放 `<项目根>/scripts/`），按本书实际情况改顶部常量后再跑。skill 目录里的原件保持不动（它是范本，且插件更新会覆盖它）。
 
-**脚本都从 skill 的 `scripts/` 目录运行，用参数/头部常量指向你的造书项目**（不必把脚本复制进项目）。头部路径常量按新项目改；merge/strip 支持传 `base_dir`。**所有脚本都不含明文密钥**——MinerU Token 一律走环境变量。
+- `scripts/01_pdf_to_md.py` —— Phase 0：MinerU API 把 PDF 转 Markdown。Token 从 `MINERU_TOKEN` 环境变量读，用法 `python 01_pdf_to_md.py <PDF> <输出目录>`。**复制后按需改**：顶部 `MODEL_VERSION/ENABLE_FORMULA/ENABLE_TABLE/LANGUAGE` 转换参数（理科开 `ENABLE_FORMULA`）。
+- `scripts/merge_book.py` —— 合并所有单元 + 附录为 `BOOK.md`（含目录、Part 分隔、锚点）。**复制后必改**：`DEFAULT_BASE_DIR`、`HEADER`（书名/画像）、`UNIT_FILES`/`APPENDIX_FILES`/`STARTER_FILE`（换成本书的单元清单——示例里是那本英语书的 6 个单元）。**可重跑**：改完单元重跑即可。
+- `scripts/strip_meta_sections.py` —— 删除单元源文件末尾的 `## 📋 自检清单` / `## 📜 版本记录` 板块（Phase 8）。**复制后**用参数指向本书单元目录或改 `DEFAULT_UNIT_DIR`。删完必须重跑 `merge_book.py`。
+
+**依赖**：`01_pdf_to_md.py` 需要 `requests`——先 `pip install -r scripts/requirements.txt`（或 `pip install requests`）。**所有脚本都不含明文密钥**——MinerU Token 一律走环境变量，复制进项目、提交前都 grep 一遍确认无明文 token。
 
 ## 标准目录结构
 
@@ -121,6 +129,10 @@ PDF→Markdown 默认走 **MinerU 在线 API**（`mineru.net`）。**开跑前�
 
 ```
 project-folder/                    # 如 english-book-八下/
+├── scripts/                        # 从 skill 复制来的示例脚本，按本书改
+│   ├── 01_pdf_to_md.py
+│   ├── merge_book.py
+│   └── strip_meta_sections.py
 ├── source-md/full.md              # 学生用书 MD
 ├── source-md-teacher/full.md      # 教师用书 MD（师生合版才有）
 ├── volume-1-units/                # 单元源文件 unit-00-starter.md ... unit-06-*.md
@@ -131,7 +143,7 @@ project-folder/                    # 如 english-book-八下/
 └── BOOK.md                        # ★ 最终产出（AI 老师读这个），由 merge_book.py 生成
 ```
 
-> **多卷书**：`merge_book.py` 默认只合并 `volume-1-units/`，分多卷时改脚本的 `UNIT_FILES`/units_dir。
+> **多卷书**：`merge_book.py` 默认只合并 `volume-1-units/`，分多卷时改你项目里那份脚本的 `UNIT_FILES`/units_dir。
 
 ## 一句话核心
 

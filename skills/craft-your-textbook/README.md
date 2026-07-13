@@ -54,7 +54,7 @@ cp -r craft-your-textbook/skills/craft-your-textbook <你的项目>/.claude/skil
 > ⚠️ 最终要让 `SKILL.md` 位于 `.../.claude/skills/craft-your-textbook/SKILL.md`。本仓库里 skill 本体在 `skills/craft-your-textbook/` 子目录下（插件市场结构要求），别把仓库根整个拷进去。
 
 **验证**：在 Claude Code 里说"帮我造一本 XX 教材的教学蓝本"能被识别即成功。
-**依赖**：Phase 0 的 PDF→Markdown 用 [MinerU](https://mineru.net) 在线 API，需自备 API Token（见第六节）；脚本需 Python 3 + `requests`。
+**依赖**：Phase 0 的 PDF→Markdown 用 [MinerU](https://mineru.net) 在线 API，需自备 API Token（见第六节）；脚本需 Python 3 + `requests`（`pip install -r skills/craft-your-textbook/scripts/requirements.txt`）。脚本是**示例模板**，造书时复制进项目再按本书改（见第七节）。
 
 ***
 
@@ -156,9 +156,15 @@ cp -r craft-your-textbook/skills/craft-your-textbook <你的项目>/.claude/skil
 
 PDF→Markdown 默认走 MinerU 在线 API。开跑前：
 
-1. 打开 **<https://mineru.net>** 注册/登录，申请 **API Token**（有免费额度）
-2. 设为环境变量（**切勿硬编码进脚本**）：`export MINERU_TOKEN="你的token"`
-3. 运行 `python scripts/01_pdf_to_md.py <PDF路径> source-md/`
+1. 装依赖并把示例脚本复制进项目（脚本在 skill 安装目录，是**示例模板**，复制后按本书改）：
+   ```bash
+   SKILL_DIR=$(dirname "$(find ~/.claude -name SKILL.md -path '*craft-your-textbook*' | head -1)")
+   pip install -r "$SKILL_DIR/scripts/requirements.txt"
+   cp "$SKILL_DIR/scripts/"*.py <项目根>/scripts/
+   ```
+2. 打开 **<https://mineru.net>** 注册/登录，申请 **API Token**（有免费额度）
+3. 设为环境变量（**切勿硬编码进脚本**）：`export MINERU_TOKEN="你的token"`
+4. 运行 `python <项目根>/scripts/01_pdf_to_md.py <PDF路径> source-md/`
 
 ## 七、目录结构
 
@@ -173,10 +179,11 @@ craft-your-textbook/
 │   ├── audit-and-testing.md        # 五层审计 + L5 教学测试 + 幻觉 gate
 │   ├── delivery-checklist.md       # Phase 7 终检 + 拆脚手架 8 类元数据 + 6 项质量门
 │   └── anti-patterns.md            # 反模式速查 + 工程陷阱
-└── scripts/
+└── scripts/                        # 示例脚本模板——造书时复制进项目再按本书改
     ├── 01_pdf_to_md.py             # Phase 0：MinerU API 转 Markdown（token 走环境变量）
     ├── merge_book.py               # 合并单元 + 附录为 BOOK.md（可重跑）
-    └── strip_meta_sections.py      # Phase 8：拆脚手架（可重跑）
+    ├── strip_meta_sections.py      # Phase 8：拆脚手架（可重跑）
+    └── requirements.txt            # 脚本依赖（requests）
 ```
 
 ## 八、延伸：教育范式，从"灌输"走向"引导"

@@ -2,6 +2,10 @@
 """
 造书 Phase 0：PDF → Markdown（MinerU 在线 API 方案）
 
+★★ 本文件是**示例模板**。请复制进你的造书项目（约定放 <项目根>/scripts/）后，
+    按需改顶部「转换参数」常量再跑——不要直接改 skill 目录里的原件（会被插件更新覆盖）。
+    依赖：pip install -r requirements.txt（就一个 requests）。
+
 ★ 运行前必须先申请 API Token：
     1. 打开 https://mineru.net 注册/登录
     2. 进入「API」/「个人中心」页面申请 API Token（免费额度足够造书用）
@@ -30,7 +34,14 @@ import time
 import zipfile
 from pathlib import Path
 
-import requests
+try:
+    import requests
+except ImportError:
+    sys.exit(
+        "✗ 缺少 requests 库。请先安装：\n"
+        "    pip install requests\n"
+        "  （或 pip install -r scripts/requirements.txt）"
+    )
 
 API_BASE = "https://mineru.net"
 
