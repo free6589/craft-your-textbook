@@ -42,7 +42,7 @@
 - ❌ 跳过拆脚手架（Phase 8）+ 质量门（Phase 9）
 
 ## 工程陷阱
-- **MinerU Token 泄漏**：❌ 绝不把 `mineru.net` 的 API Token 明文写进脚本（原七上项目就把真 token 硬编码进了 `01_pdf_to_md.py`）。一律走 `MINERU_TOKEN` 环境变量；提交前 grep 一遍确保无明文密钥
+- **MinerU Token 泄漏**：❌ 绝不把 `mineru.net` 的 API Token 明文写进脚本（曾有项目把真 token 硬编码进 `01_pdf_to_md.py`，随仓库一起泄漏）。一律走 `MINERU_TOKEN` 环境变量；提交前 grep 一遍确保无明文密钥
 - **忘了申请 apikey**：Phase 0 开跑前必须先让用户去 https://mineru.net 申请 API Token 并设好环境变量，否则脚本第一步就 401
 - **后台任务丢输出**：`command | head -N` 会让 Windows Python 静默丢输出。用 `python -u` + 日志文件
 - **长上下文 subagent 容易漂**：每个 subagent 只做一件事
