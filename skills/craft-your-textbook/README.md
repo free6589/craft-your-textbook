@@ -14,7 +14,7 @@
 
 ```
 /plugin marketplace add xx-hub/craft-your-textbook
-/plugin install craft-your-textbook
+/plugin install craft-your-textbook@craft-your-textbook
 ```
 
 更新 `/plugin marketplace update craft-your-textbook`；卸载 `/plugin uninstall craft-your-textbook`。
@@ -54,7 +54,7 @@ cp -r craft-your-textbook/skills/craft-your-textbook <你的项目>/.claude/skil
 > ⚠️ 最终要让 `SKILL.md` 位于 `.../.claude/skills/craft-your-textbook/SKILL.md`。本仓库里 skill 本体在 `skills/craft-your-textbook/` 子目录下（插件市场结构要求），别把仓库根整个拷进去。
 
 **验证**：在 Claude Code 里说"帮我造一本 XX 教材的教学蓝本"能被识别即成功。
-**依赖**：Phase 0 的 PDF→Markdown 用 [MinerU](https://mineru.net) 在线 API，需自备 API Token（见第六节）；脚本需 Python 3 + `requests`（`pip install -r skills/craft-your-textbook/scripts/requirements.txt`）。脚本是**示例模板**，造书时复制进项目再按本书改（见第七节）。
+**依赖**：Phase 0 的 PDF→Markdown 用 [MinerU](https://mineru.net) 在线 API，需自备 API Token（见第六节）；脚本需 Python 3 + `requests`。
 
 ***
 
@@ -154,17 +154,10 @@ cp -r craft-your-textbook/skills/craft-your-textbook <你的项目>/.claude/skil
 
 ### ⚠️ 开工前置：申请 MinerU API Token
 
-PDF→Markdown 默认走 MinerU 在线 API。开跑前：
+PDF→Markdown 默认走 MinerU 在线 API。人需要手动做的只有一步——拿到 Token（其余装依赖、复制脚本等由 skill 自动完成）：
 
-1. 装依赖并把示例脚本复制进项目（脚本在 skill 安装目录，是**示例模板**，复制后按本书改）：
-   ```bash
-   SKILL_DIR=$(dirname "$(find ~/.claude -name SKILL.md -path '*craft-your-textbook*' | head -1)")
-   pip install -r "$SKILL_DIR/scripts/requirements.txt"
-   cp "$SKILL_DIR/scripts/"*.py <项目根>/scripts/
-   ```
-2. 打开 **<https://mineru.net>** 注册/登录，申请 **API Token**（有免费额度）
-3. 设为环境变量（**切勿硬编码进脚本**）：`export MINERU_TOKEN="你的token"`
-4. 运行 `python <项目根>/scripts/01_pdf_to_md.py <PDF路径> source-md/`
+1. 打开 **<https://mineru.net>** 注册/登录，申请 **API Token**（有免费额度）
+2. 设为环境变量（**切勿硬编码进脚本**）：`export MINERU_TOKEN="你的token"`
 
 ## 七、目录结构
 

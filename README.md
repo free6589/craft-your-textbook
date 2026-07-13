@@ -154,11 +154,10 @@ cp -r craft-your-textbook/skills/craft-your-textbook <你的项目>/.claude/skil
 
 ### ⚠️ 开工前置：申请 MinerU API Token
 
-PDF→Markdown 默认走 MinerU 在线 API。开跑前：
+PDF→Markdown 默认走 MinerU 在线 API。人需要手动做的只有一步——拿到 Token（其余装依赖、复制脚本等由 skill 自动完成）：
 
 1. 打开 **<https://mineru.net>** 注册/登录，申请 **API Token**（有免费额度）
 2. 设为环境变量（**切勿硬编码进脚本**）：`export MINERU_TOKEN="你的token"`
-3. 运行 `python scripts/01_pdf_to_md.py <PDF路径> source-md/`
 
 ## 七、目录结构
 
@@ -173,10 +172,11 @@ craft-your-textbook/
 │   ├── audit-and-testing.md        # 五层审计 + L5 教学测试 + 幻觉 gate
 │   ├── delivery-checklist.md       # Phase 7 终检 + 拆脚手架 8 类元数据 + 6 项质量门
 │   └── anti-patterns.md            # 反模式速查 + 工程陷阱
-└── scripts/
+└── scripts/                        # 示例脚本模板——造书时复制进项目再按本书改
     ├── 01_pdf_to_md.py             # Phase 0：MinerU API 转 Markdown（token 走环境变量）
     ├── merge_book.py               # 合并单元 + 附录为 BOOK.md（可重跑）
-    └── strip_meta_sections.py      # Phase 8：拆脚手架（可重跑）
+    ├── strip_meta_sections.py      # Phase 8：拆脚手架（可重跑）
+    └── requirements.txt            # 脚本依赖（requests）
 ```
 
 ## 八、延伸：教育范式，从"灌输"走向"引导"
