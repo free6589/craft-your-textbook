@@ -19,9 +19,37 @@
 
 更新 `/plugin marketplace update craft-your-textbook`；卸载 `/plugin uninstall craft-your-textbook`。
 
-**方式二 · clone 到 skills 目录**：把仓库里的 `skills/craft-your-textbook/` 文件夹放进 `~/.claude/skills/`（用户级）或 `<项目>/.claude/skills/`（项目级）。
+**方式二 · clone 到 skills 目录**——适合想改源码、或不用插件市场的人。先 clone 仓库，再把里面的 `skills/craft-your-textbook/` 这个文件夹放进 Claude Code 的 skills 目录：
 
-**方式三 · 下载 zip**：解压后同样把 `skills/craft-your-textbook/` 放进上述目录。
+```bash
+# 1. 先 clone 到任意临时位置
+git clone https://github.com/xx-hub/craft-your-textbook.git
+
+# 2a. 装成「用户级」——所有项目都能用
+#    类 Unix / macOS：
+cp -r craft-your-textbook/skills/craft-your-textbook ~/.claude/skills/
+#    Windows（Git Bash）：
+cp -r craft-your-textbook/skills/craft-your-textbook "$HOME/.claude/skills/"
+
+# 2b. 或装成「项目级」——只在某个项目里可用
+cp -r craft-your-textbook/skills/craft-your-textbook <你的项目>/.claude/skills/
+```
+
+装完的正确样子（用户级为例）：
+
+```
+~/.claude/skills/craft-your-textbook/
+├── SKILL.md          # ← 必须在这一层
+├── README.md
+├── references/
+└── scripts/
+```
+
+> 想跟随仓库更新，可以不用 `cp` 而用软链接（类 Unix）：
+> `ln -s "$(pwd)/craft-your-textbook/skills/craft-your-textbook" ~/.claude/skills/craft-your-textbook`，
+> 之后仓库 `git pull` 就自动生效。
+
+**方式三 · 下载 zip**：在 GitHub 页面 `Code → Download ZIP`，解压后同样把 `skills/craft-your-textbook/` 文件夹放进 `~/.claude/skills/`（用户级）或 `<项目>/.claude/skills/`（项目级）。
 
 > ⚠️ 最终要让 `SKILL.md` 位于 `.../.claude/skills/craft-your-textbook/SKILL.md`。本仓库里 skill 本体在 `skills/craft-your-textbook/` 子目录下（插件市场结构要求），别把仓库根整个拷进去。
 
