@@ -18,7 +18,7 @@
 from pathlib import Path
 import sys
 
-DEFAULT_UNIT_DIR = r"f:\code\po-juan-xie-shu\english-book-XX\volume-1-units"
+DEFAULT_UNIT_DIR = r"./english-book-XX/volume-1-units"  # 占位：请传参 或改此值
 
 CHECKLIST_MARKER = "## 📋 自检清单"
 VERSION_MARKER = "## 📜 版本记录"

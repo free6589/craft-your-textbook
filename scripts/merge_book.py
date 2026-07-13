@@ -11,7 +11,7 @@
 
 ★ 新项目需调整的地方：
     1. DEFAULT_BASE_DIR：项目根目录
-    2. header：书名、目录、版本号
+    2. header：书名、画像、目录（勿写版本号——版本是过程元数据，Phase 9 质量门会拦 v1.0/v1.1）
     3. UNIT_FILES：单元文件名 → 锚点 的映射
     4. APPENDIX_FILES：附录文件名 → 锚点 的映射
     5. STARTER_FILE：若无 Starter 预备单元则设为 None
@@ -19,7 +19,7 @@
 import os
 import sys
 
-DEFAULT_BASE_DIR = r"f:\code\po-juan-xie-shu\english-book-XX"
+DEFAULT_BASE_DIR = r"./english-book-XX"  # 占位：请传参 python merge_book.py <项目根> 或改此值
 
 # ── 单元 / 附录 / Starter 配置（新项目按需改）────────────────────────
 STARTER_FILE = "unit-00-starter.md"          # 无预备单元则设 None
@@ -44,7 +44,6 @@ HEADER = """# [书名] · 苏格拉底教学蓝本
 
 **学习者画像**：[画像]。
 **组织方式**：[按单元顺序 / 按主题]。
-**版本**：v1.0
 
 ---
 

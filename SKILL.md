@@ -66,7 +66,7 @@ description: 让你具备"亲手为自己造一本教材"的能力——把教�
 | **1** | 架构与大纲先行（五项，见下） | `OUTLINE.md`、`META.md` |
 | **2** | 先写一节**金标准**，跑 L5 教学测试 | `volume-1-units/unit-0X-*.md` |
 | **3** | N 个并行 sub-agent 修订其余单元，每个必读金标准 | 其余单元 md |
-| **4** | 附录（核心概念索引 / 关键术语表 / 分学科补充：语言类=词汇+语法，理科=公式+定理，文史=大事年表） | `appendix/appendix-*.md` |
+| **4** | 附录收网（见 `references/outline-and-analysis.md` 第七节）——汇总各单元弹药库/知识锚定 | `appendix/appendix-*.md` |
 | **5** | 跨单元审计（关联表 ↔ 各单元 🔗 一致，知识递进链不断） | —— |
 | **6** | 合并为 `BOOK.md`（`merge_book.py`） | `BOOK.md` |
 | **7** | 终检（禁用词/乱码/板块/引用/坑型编号） | —— |
@@ -99,7 +99,7 @@ PDF→Markdown 默认走 **MinerU 在线 API**（`mineru.net`）。**开跑前�
 
 ## 参考文件（按需加载，不要一次全读）
 
-- **分析源 MD + 设计大纲时（Phase 0.5/1）** → 读 `references/outline-and-analysis.md`（怎么读 MinerU 的 MD、抓 Scope and sequence 总表、切单元、写差异报告、落成 OUTLINE.md 五项）
+- **分析源 MD + 设计大纲 + 写附录时（Phase 0.5/1/4）** → 读 `references/outline-and-analysis.md`（怎么读 MinerU 的 MD、抓 Scope and sequence 总表、切单元、写差异报告、落成 OUTLINE.md 五项、附录怎么写见第七节）
 - **写单元时** → 读 `references/unit-template.md`（7 板块模板 + 四条设计原则 + 弹药库按学科定制 + 禁用词表）
 - **仅语言类教材（处理生词时）** → 读 `references/vocabulary-strategy.md`（L1-L4 分层 + 三动作）。数学/历史/编程等非语言学科**跳过此文件**——弹药库不含"词汇/音标/生词"维度
 - **审校/教学测试时** → 读 `references/audit-and-testing.md`（五层审计 + L5 教学测试 + 幻觉 gate）

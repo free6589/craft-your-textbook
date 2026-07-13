@@ -139,10 +139,11 @@ craft-your-textbook/
 ├── SKILL.md                        # 主入口：模式决策 + Phase 0→9 全流程导航
 ├── README.md                       # 本文件
 ├── references/                     # 按需加载的细则
+│   ├── outline-and-analysis.md     # 分析源 MD + 大纲五项 + 差异报告 + 附录写法（Phase 0.5/1/4）
 │   ├── unit-template.md            # 7 板块模板 + 四条设计原则 + 弹药库按学科定制 + 禁用词
 │   ├── vocabulary-strategy.md      # 生词 L1-L4 分层 + 三动作（仅语言类）
 │   ├── audit-and-testing.md        # 五层审计 + L5 教学测试 + 幻觉 gate
-│   ├── delivery-checklist.md       # 8 类过程元数据 + 拆脚手架 + 6 项质量门
+│   ├── delivery-checklist.md       # Phase 7 终检 + 拆脚手架 8 类元数据 + 6 项质量门
 │   └── anti-patterns.md            # 反模式速查 + 工程陷阱
 └── scripts/
     ├── 01_pdf_to_md.py             # Phase 0：MinerU API 转 Markdown（token 走环境变量）
