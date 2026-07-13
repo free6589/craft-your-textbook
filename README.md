@@ -119,7 +119,7 @@ git clone https://github.com/xx-hub/craft-your-textbook.git <你的项目>/.clau
 4   附录
 5   跨单元审计
 6   合并为 BOOK.md
-7   终检（禁用词/乱码/板块/引用）
+7   终检（禁用词/乱码/板块/引用/坑型编号）
 8   拆脚手架（交付前硬门）
 9   交付质量门（6 项全绿才交付）
 ```

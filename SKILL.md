@@ -77,6 +77,10 @@ description: 让你具备"亲手为自己造一本教材"的能力——把教�
 
 Phase 1 同时定稿 **`META.md`（写作规范）**：7 板块模板 + 禁用词 +（语言类才有的）生词策略——即 `references/unit-template.md` 的内容落成本项目的规范文件。**`OUTLINE.md` 与 `META.md` 双双定稿，才是"可以开始并行写单元"的信号。**
 
+**Phase 2 金标准**：先只写**一个**单元并审到满意（选有强推导链、体感峰值的单元），拿它跑 L5 教学测试（见 `references/audit-and-testing.md`）。**没有金标准就并行写多单元 = 各 agent 必然漂移**。金标准扛住测试后，才作为范例进入所有 writing agent 的必读列表。
+
+**Phase 3 并行铺单元**：每个 writing sub-agent 只写一个单元，其 prompt 必带三样：① 金标准单元全文（作范例）② `META.md` + `OUTLINE.md`（规范 + 该单元在知识链中的位置和跨单元引用）③ 幻觉 gate 那句"每写一条具名引用/数字前问自己愿不愿打赌是真的，有犹豫就降级为间接转述"。**一个 agent 只做一件事**，避免长上下文漂移。
+
 ## ⚠️ Phase 0 前置：申请 MinerU API Token
 
 PDF→Markdown 默认走 **MinerU 在线 API**（`mineru.net`）。**开跑前先让用户完成这一步**：
@@ -106,25 +110,27 @@ PDF→Markdown 默认走 **MinerU 在线 API**（`mineru.net`）。**开跑前�
 
 - `scripts/01_pdf_to_md.py` —— Phase 0：MinerU API 把 PDF 转 Markdown。Token 从 `MINERU_TOKEN` 环境变量读，用法 `python 01_pdf_to_md.py <PDF> <输出目录>`。
 - `scripts/merge_book.py` —— 合并所有单元 + 附录为 `BOOK.md`（含目录、Part 分隔、锚点）。**可重跑**：改完单元重跑即可。
-- `scripts/strip_meta_sections.py` —— 删除单元源文件末尾的自检清单 + 版本记录（Phase 8）。删完必须重跑 `merge_book.py`。
+- `scripts/strip_meta_sections.py` —— 删除单元源文件末尾的 `## 📋 自检清单` / `## 📜 版本记录` 板块（Phase 8）。删完必须重跑 `merge_book.py`。
 
-脚本头部的路径/参数常量需按新项目调整。**所有脚本都不含明文密钥**——MinerU Token 一律走环境变量。
+**脚本都从 skill 的 `scripts/` 目录运行，用参数/头部常量指向你的造书项目**（不必把脚本复制进项目）。头部路径常量按新项目改；merge/strip 支持传 `base_dir`。**所有脚本都不含明文密钥**——MinerU Token 一律走环境变量。
 
 ## 标准目录结构
+
+造书项目（脚本产出物写到这里；脚本本身留在 skill 的 `scripts/`）：
 
 ```
 project-folder/                    # 如 english-book-八下/
 ├── source-md/full.md              # 学生用书 MD
 ├── source-md-teacher/full.md      # 教师用书 MD（师生合版才有）
 ├── volume-1-units/                # 单元源文件 unit-00-starter.md ... unit-06-*.md
-├── appendix/                      # appendix-A-vocabulary.md, appendix-B-grammar.md
+├── appendix/                      # appendix-A-*.md, appendix-B-*.md
 ├── META.md                        # 写作规范
 ├── OUTLINE.md                     # 大纲
 ├── DIFF-STUDENT-TEACHER.md        # 差异报告（师生合版）
-├── merge_book.py                  # 合并脚本（可重跑）
-├── strip_meta_sections.py         # 拆脚手架脚本（可重跑）
-└── BOOK.md                        # ★ 最终产出（AI 老师读这个）
+└── BOOK.md                        # ★ 最终产出（AI 老师读这个），由 merge_book.py 生成
 ```
+
+> **多卷书**：`merge_book.py` 默认只合并 `volume-1-units/`，分多卷时改脚本的 `UNIT_FILES`/units_dir。
 
 ## 一句话核心
 
