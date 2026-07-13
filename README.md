@@ -14,7 +14,7 @@
 
 ```
 /plugin marketplace add xx-hub/craft-your-textbook
-/plugin install craft-your-textbook
+/plugin install craft-your-textbook@craft-your-textbook
 ```
 
 更新 `/plugin marketplace update craft-your-textbook`；卸载 `/plugin uninstall craft-your-textbook`。
