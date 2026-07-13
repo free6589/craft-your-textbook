@@ -19,3 +19,4 @@ Thumbs.db
 
 # 密钥（务必不要提交）
 .env
+.claude/

@@ -93,8 +93,8 @@ git clone https://github.com/xx-hub/craft-your-textbook.git <你的项目>/.clau
 对 Claude Code 说类似这样的话即可触发：
 
 - "帮我造一本 XX 教材的教学蓝本"
-- "按造书方法做一本新书"
-- "复刻 english-book 的写法做一本 XX"
+- "按这套造书方法做一本新书"
+- "复刻这个 skill 的写法做一本 XX"
 
 ### 造书模式：默认师生合版，逐级降级
 

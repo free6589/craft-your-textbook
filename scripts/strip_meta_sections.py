@@ -12,8 +12,9 @@
     # 省略参数时默认用下面的 DEFAULT_UNIT_DIR
 
 ★ 删完后必须重跑 merge_book.py 重新合并 BOOK.md。
-★ 本脚本只删末尾两个板块；正文内散落的版本标记 / "教师用书说" / 造书者口吻
-  需另行全局清理（见 references/delivery-checklist.md 的 8 类元数据）。
+★ 本脚本只删**单元文件**（unit-*.md）末尾的两个板块；**不处理附录**（附录不套 7 板块模板、
+  没有这两个板块）。附录及正文内散落的版本标记 / "教师用书说" / 造书者口吻，
+  需另行全局清理（见 references/delivery-checklist.md 的 Phase 8 步骤2 + 8 类元数据）。
 """
 from pathlib import Path
 import sys
