@@ -8,9 +8,25 @@
 
 ## 📦 安装
 
-本文档是 skill 内的详细说明。**安装方式（插件市场 / clone / zip）见仓库首页 README**：<https://github.com/xx-hub/craft-your-textbook>
+本仓库既是 **Claude Code 插件市场（marketplace）**，也直接包含 skill 本体，三种用法任选。
 
-> 通过 `/plugin install craft-your-textbook` 或把本 `craft-your-textbook/` 文件夹放进 `~/.claude/skills/` 即可。**依赖**：Phase 0 的 PDF→Markdown 用 [MinerU](https://mineru.net) 在线 API，需自备 API Token（见第六节）；脚本需 Python 3 + `requests`。
+**方式一 · 插件市场（推荐，可一键更新）**——在 Claude Code 里：
+
+```
+/plugin marketplace add xx-hub/craft-your-textbook
+/plugin install craft-your-textbook
+```
+
+更新 `/plugin marketplace update craft-your-textbook`；卸载 `/plugin uninstall craft-your-textbook`。
+
+**方式二 · clone 到 skills 目录**：把仓库里的 `skills/craft-your-textbook/` 文件夹放进 `~/.claude/skills/`（用户级）或 `<项目>/.claude/skills/`（项目级）。
+
+**方式三 · 下载 zip**：解压后同样把 `skills/craft-your-textbook/` 放进上述目录。
+
+> ⚠️ 最终要让 `SKILL.md` 位于 `.../.claude/skills/craft-your-textbook/SKILL.md`。本仓库里 skill 本体在 `skills/craft-your-textbook/` 子目录下（插件市场结构要求），别把仓库根整个拷进去。
+
+**验证**：在 Claude Code 里说"帮我造一本 XX 教材的教学蓝本"能被识别即成功。
+**依赖**：Phase 0 的 PDF→Markdown 用 [MinerU](https://mineru.net) 在线 API，需自备 API Token（见第六节）；脚本需 Python 3 + `requests`。
 
 ***
 
