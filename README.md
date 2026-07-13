@@ -14,10 +14,10 @@
 
 ```bash
 # 装成用户级 skill（所有项目都能用）
-git clone https://github.com/<你的用户名>/craft-your-textbook.git ~/.claude/skills/craft-your-textbook
+git clone https://github.com/xx-hub/craft-your-textbook.git ~/.claude/skills/craft-your-textbook
 
 # 或装成某个项目的项目级 skill
-git clone https://github.com/<你的用户名>/craft-your-textbook.git <你的项目>/.claude/skills/craft-your-textbook
+git clone https://github.com/xx-hub/craft-your-textbook.git <你的项目>/.claude/skills/craft-your-textbook
 ```
 
 **方式二 · 下载 zip**：下载本仓库 zip，解压后把整个 `craft-your-textbook/` 文件夹放进 `~/.claude/skills/`（用户级）或 `<项目>/.claude/skills/`（项目级）。
