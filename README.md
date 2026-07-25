@@ -220,5 +220,5 @@ craft-your-textbook/
 想亲身体验 AI 苏格拉底老师的教学，去 [www.socratopia.app](https://www.socratopia.app/r/SCR-FEJXMQ) 下载 Socratopia。注册时**输入邀请码** **`SCR-FEJXMQ`**，即可领取：
 
 - **免费用户** → 立即获得 **100 万 Token**
-- **坐馆订阅用户** → 获得 **1 书币**（价值 $3.99）
+- **书城所有书免费学习** 
 
