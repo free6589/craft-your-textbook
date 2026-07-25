@@ -63,10 +63,11 @@ description: 让你具备"亲手为自己造一本教材"的能力——把教�
 |---|---|---|
 | **0** | 源教材 PDF → Markdown（默认 MinerU 在线 API，需 apikey） | `source-md/full.md`（+ `source-md-teacher/full.md`） |
 | **0.5** | 差异报告（仅师生合版）——逐单元列教师用书独有内容 | `DIFF-STUDENT-TEACHER.md` |
+| **0.75** | 异构源料：探查 → 建素材分工 → 源材料索引（仅多源场景，单一 full.md 跳过）| `源材料索引.md` |
 | **1** | 架构与大纲先行（五项，见下） | `OUTLINE.md`、`META.md` |
 | **2** | 先写一节**金标准**，跑 L5 教学测试 | `volume-1-units/unit-0X-*.md` |
 | **3** | N 个并行 sub-agent 修订其余单元，每个必读金标准 | 其余单元 md |
-| **4** | 附录收网（见 `references/outline-and-analysis.md` 第七节）——汇总各单元弹药库/知识锚定 | `appendix/appendix-*.md` |
+| **4** | 附录收网（见 `references/outline-and-analysis.md` 第八节）——汇总各单元弹药库/知识锚定 | `appendix/appendix-*.md` |
 | **5** | 跨单元审计（关联表 ↔ 各单元 🔗 一致，知识递进链不断） | —— |
 | **6** | 合并为 `BOOK.md`（`merge_book.py`） | `BOOK.md` |
 | **7** | 终检（禁用词/乱码/板块/引用/坑型编号） | —— |
@@ -106,7 +107,7 @@ PDF→Markdown 默认走 **MinerU 在线 API**（`mineru.net`）。**开跑前�
 
 ## 参考文件（按需加载，不要一次全读）
 
-- **分析源 MD + 设计大纲 + 写附录时（Phase 0.5/1/4）** → 读 `references/outline-and-analysis.md`（怎么读 MinerU 的 MD、抓 Scope and sequence 总表、切单元、写差异报告、落成 OUTLINE.md 五项、附录怎么写见第七节）
+- **分析源 MD + 设计大纲 + 写附录时（Phase 0.5/1/4）** → 读 `references/outline-and-analysis.md`（怎么读 MinerU 的 MD、抓 Scope and sequence 总表、切单元、写差异报告、落成 OUTLINE.md 五项、附录怎么写见第八节）
 - **写单元时** → 读 `references/unit-template.md`（7 板块模板 + 四条设计原则 + 弹药库按学科定制 + 禁用词表）
 - **仅语言类教材（处理生词时）** → 读 `references/vocabulary-strategy.md`（L1-L4 分层 + 三动作）。数学/历史/编程等非语言学科**跳过此文件**——弹药库不含"词汇/音标/生词"维度
 - **审校/教学测试时** → 读 `references/audit-and-testing.md`（五层审计 + L5 教学测试 + 幻觉 gate）
