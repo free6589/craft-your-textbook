@@ -1,153 +1,135 @@
 ---
 name: craft-your-textbook
-description: 让你具备"亲手为自己造一本教材"的能力——把教材（PDF）或某领域知识加工成 AI 苏格拉底老师能拿去上课的教学蓝本（pedagogical spec）。学习者不读书，只跟 AI 老师对话，AI 老师读蓝本用引导式提问教学。适用任何学科（英语/数学/历史/编程等）；7 板块中只有"弹药库"按学科定制，词汇/音标/生词维度仅语言类需要。默认走师生合版流程：优先要到学生用书+教师用书两份源一起做，只有一份先确认版本身份，用户明确说"没有任何素材"才 AI 从零造。覆盖 PDF→Markdown、大纲先行、7 板块单元模板、金标准节、并行铺单元、跨单元审计、合并 BOOK.md、拆脚手架、交付质量门全流程。当用户说"造一本教学蓝本 / 给我自己造一本 XX 教材 / 做一本 XX 教材的书 / 按这套造书方法做一本新书"时使用。
+description: 让你具备"亲手为自己造一本教材"的能力——把源材料（教材/考纲/讲义等）加工成 AI 苏格拉底老师能拿去上课的教学蓝本（pure-blueprint），或一本给人读的流畅教材（human-readable，AI 也能直接教）。适用任何学科。两条路线互斥选择，默认推荐给 AI 老师的版本。覆盖 PDF→MD、源探查、教学设计五步、金标准先行、模式选型、并行铺章、审计合并拆脚手架全流程。当用户说"造一本教学蓝本/做一本 XX 教材/按这套方法写一本书"时使用。
 ---
 
 # 亲手造属于你自己的教材（Craft Your Textbook）
 
 ## 这是什么
 
-造书 = 为 **AI 苏格拉底老师**制备一份**教学蓝本**（pedagogical spec）。三方分工决定一切下游规则：
+造书 = 为学习者制备一份**教材**。有两种形态（触发后必选，见下"第一步：定路线"）：
+- **pure-blueprint**：给 AI 苏格拉底老师读的教学蓝本（pedagogical spec），结构化、含元指令
+- **human-readable**：给人读的流畅教材，AI 拿到也能直接教
+
+三方分工决定所有下游规则：
 
 | 角色 | 做什么 | 看到什么 |
 |---|---|---|
-| **用户（学习者）** | 跟 AI 老师对话学习 | 只看到对话；**不读书** |
-| **AI 老师** | 读书，用引导式提问教用户 | 读完整本蓝本作为输入 |
-| **书（造物）** | 教学蓝本 | 是 AI 老师的输入，不是终端产品 |
+| **用户（学习者）** | 跟 AI 老师对话学习 | 只看到对话（blueprint）或读教材+对话（human-readable） |
+| **AI 老师** | 读书，用引导式提问教学 | 读完整本书作为输入 |
+| **书（造物）** | 教学素材 | 是 AI 老师的输入，或人读的教材 |
 
-**最常见的根本错误**：把蓝本当"给人读的书"来写——开篇钩子写给谁看？"你"在跟谁说话？读者根本不读。写每一块前先问自己：**"AI 老师会怎么用这一块？"**
+**最常见的根本错误**：把书写成"给读者感受的文学作品"——开篇钩子写给谁看？"你"指谁？写每一块前先问："AI 老师/人读到这块会怎么用它？"
 
-书对 AI 老师的四个功能：①**内容锚定**（防跑题/幻觉）②**知识结构**（推理主线）③**弹药库**（案例随取随用）④**提问路线图**（用什么问题引导用户抵达知识点）。
+书对 AI 老师的四个功能：①**内容锚定**（防跑题/幻觉）②**知识结构**（推理主线）③**弹药库**（案例随取随用）④**提问路线图**（引导学生抵达知识点的问题方向）。
 
-## 何时用这个 skill
+## 何时用
 
-- 用户要把一本教材/一个领域做成 AI 老师能教的书
-- 用户说"按这套造书方法做一本新书""复刻这个 skill 的写法做一本 XX""做一本 XX 的教学蓝本"
-- 需要从 PDF 教材加工出结构化教学 spec
+- 用户要把教材/领域知识做成 AI 能教的书或人读的教材
+- 用户说"造一本书""做一本教材""按这套方法写 XX"
+- 需要从 PDF 教材加工出结构化教学素材
 
-**触发后第一步：定模式**（见下节）。默认走**师生合版**（学生用书 + 教师用书）；主动问用户要教师用书。只有一份源就先确认版本身份；用户明确说"什么源都没有"才从零造。
+**第一步：定路线**（触发后必须问，不替用户默认）：
 
-## 造书模式：先分"有没有源"，再看"源怎么构成"
+> "这本书是喂给 AI 苏格拉底老师教学用的教学蓝本（推荐——AI 教学精度最高），还是一本给人读的流畅教材（AI 也能直接拿它教，但教学约束更少）？"
 
-**开工前第一件事是定模式**。分两步问：
+决策启发式：
+1. 用户原话含"我自己读/出版/给别人看/通读/给真人教师" → human-readable
+2. 书要喂给已成型的苏格拉底 AI 软件（Socratopia 等） → pure-blueprint
+3. 用户不确定 → 推荐 pure-blueprint 并等拍板
 
-**第一步——有没有源？** 有源走 **Mode B**（默认，风险是翻译/转述原文）；用户明确说"什么素材都没有、就靠你从零写"才走 **Mode A**（风险是**幻觉**，仅适合 AI 知识密度高的领域，见下）。**绝不要因为"手头暂时没找到源"就跳到 Mode A**——先穷尽找源。
+路线差异和细节见 `references/two-routes.md`。
 
-**第二步（仅 Mode B）——源怎么构成？** 这决定做哪种预处理，源越全、AI 老师的蓝本越可靠：
+## 全流程导航（6 阶段）
 
-| 源的构成 | 预处理 | 说明 |
-|---|---|---|
-| **学生用书 + 教师用书**（师生合版，**首选**） | Phase 0.5 差异报告 | **主动向用户要教师用书**——两份一起做质量明显更高，应试价值见 README 第四节 |
-| **多份异构源**（≥2 份，权威层级不同或可能冲突，如教材+考纲、原文+讲义+笔记） | Phase 0.75 源级探查（索引第一层）+ Phase 1 回填章级映射 | 派探查 agent 摸结构、分权威层级、建索引防幻觉（见 `references/outline-and-analysis.md` §四） |
-| **单一版本**（只有一份 PDF/教材） | 都跳过 | 先确认这份是学生版还是教师版（写法不同），再确认真的没有第二份 |
+先出设计，再写正文；先写一章金标准审到满意，再并行铺开。平均每本书 5-7 轮审校。
 
-> **师生合版是默认路径**：用户往往只给学生用书就说"造吧"。**先问一句**："有没有配套的教师用书？两份一起做出来的蓝本质量明显更高。" 搞得到就升级到师生合版。
+| 阶段 | 名称 | 做什么 | 产出 |
+|---|---|---|---|
+| **Phase 1** | 源材料准备 | PDF→MD（MinerU API）+ 复制脚本进项目 + 装依赖 | `sources-md/`、`scripts/` |
+| **Phase 2** | 源探查 | 所有有源书必走：摸源结构、角色标签、简码表、权威层级 | `源材料索引.md` 第一层 |
+| **Phase 3** | 教学设计 | **核心阶段**：五步设计（见下）+ 三个用户确认关卡 | META/OUTLINE/style-spec/源材料索引 |
+| **Phase 4** | 金标准验证 | 选一章按设计的语法写 → 五层审计 + L5 教学测试 → 通过后回填 style-spec | 金标准章 md |
+| **Phase 5** | 全量写作+收网 | sub-agent 并行铺章 → 附录汇编 → 跨章审计 → 合并 BOOK.md | chapters/、appendix/、BOOK.md |
+| **Phase 6** | 终检与交付 | 终检 → 拆脚手架 → 质量门 → 交付 | 纯净 BOOK.md |
 
-> **单份 vs 多份的判断准则**：不是数份数，而是看**源之间有没有"权威层级差异"或"可能冲突"**——有就建 Phase 0.75 索引，没有就当单一源处理。两份同构材料（如两版同一教材）无层级差异，可当单一源。
+Mode A（无源从零造）差异：Phase 2 跳过、幻觉 gate 更严，仅适合 AI 知识密度高领域。
 
-### Mode A（无源从零造）的额外要求
+## 核心：Phase 3 教学设计五步
 
-首要风险是**幻觉**，仅适合 AI 知识密度高的领域（古典音乐/哲学/数学）。开工前务必做"AI 知识密度自评"（见 `references/audit-and-testing.md`）。
+这是 v7 的核心——Agent 不套模板，自己设计书的形状。
 
-## 全流程导航（Phase 0 → 9）
+1. **Phase 3.1 分析源+推导目标**（不读模式库，免先入为主）：
+   - 源材料形态是什么？
+   - 这本书让学习者最终能做到什么？（通过考试/理解概念/掌握技能/通读建体系）
+   - 学习者最大的坑是什么？
+   - **用户确认关卡 ①**：目标和坑是否准确
 
-先出大纲，再写正文；先写一节金标准，再并行铺其余。**平均每本书 5-7 轮审校，不要期待一次成型。**
+2. **Phase 3.2 路线决策**（见"第一步：定路线"）
 
-| Phase | 做什么 | 产出 |
-|---|---|---|
-| **0** | 源教材 PDF → Markdown（默认 MinerU 在线 API，需 apikey） | `source-md/full.md`（+ `source-md-teacher/full.md`） |
-| **0.5** | 差异报告（仅师生合版）——逐单元列教师用书独有内容 | `DIFF-STUDENT-TEACHER.md` |
-| **0.75** | 异构源料**第一层·源级探查**（仅多源场景）：探查各源结构 → 简码表 → 权威层级/真相校准。**不建章级映射**（此时还没有章） | 源级探查表（简码+层级） |
-| **1** | 架构与大纲先行（五项，见下）；**多源场景在定章后回填源材料索引第二层·章级映射** | `OUTLINE.md`、`META.md`（多源另出 `源材料索引.md`） |
-| **2** | 先写一节**金标准**，跑 L5 教学测试 | `volume-1-units/unit-0X-*.md` |
-| **3** | N 个并行 sub-agent 修订其余单元，每个必读金标准 | 其余单元 md |
-| **4** | 附录收网（见 `references/outline-and-analysis.md` 第八节）——汇总各单元弹药库/知识锚定 | `appendix/appendix-*.md` |
-| **5** | 跨单元审计（关联表 ↔ 各单元 🔗 一致，知识递进链不断） | —— |
-| **6** | 合并为 `BOOK.md`（`merge_book.py`） | `BOOK.md` |
-| **7** | 终检（禁用词/乱码/板块/引用/坑型编号） | —— |
-| **8** | **拆脚手架**（`strip_meta_sections.py`）——交付前硬门 | 纯净单元 md + 重跑合并 |
-| **9** | 交付质量门（6 项全绿才交付） | 可交付 `BOOK.md` |
+3. **Phase 3.3 模式选型+板块语法设计**：
+   - 读 `references/patterns/README.md`，理解模式库
+   - 带 Phase 3.1 的教学问题翻卡（每张卡判断"这个问题本书有没有"）
+   - 回答两个强制问题写进 style-spec：
+     ① 考虑过哪些模式、拒绝了哪些、为什么拒绝？
+     ② 所选每个模式对应本书哪个具体教学问题？
+   - 可选：从预装配包（认证/叙事/K-12）出发再定制
+   - 设计章内板块语法（必含/循环/可选板块、叙事约定、章末教学区）
+   - **用户确认关卡 ②**：模式选型和板块语法是否合理
 
-**Phase 1 大纲五项**：①模块划分 + 页码定位 ②全书知识链（一句话推理主线）③逐单元知识点"含义三问"（是什么/为什么重要/直觉是什么）④跨单元关联表（核心）⑤全局思维导图（ASCII）。
+4. **Phase 3.4 整书教学架构设计**：
+   - 知识链主线、卷/部划分、逐章骨架
+   - 特殊功能章（地基章/收网章）
+   - 跨章引用机制、附录汇编策略
+   - 贯穿案例/主角约定
+   - 回填源材料索引第二层（章级映射）
+   - **用户确认关卡 ③**：全书架构和逐章骨架
 
-Phase 1 同时定稿 **`META.md`（写作规范）**：把 `references/unit-template.md` 的通用模板收敛成**本书的具体约定**（7 板块取舍 + 本书禁用词 + 弹药库学科字段 + 标题/体量约定）——最小骨架四节见 `references/outline-and-analysis.md` 第六节。**`OUTLINE.md` 与 `META.md` 双双定稿，才是"可以开始并行写单元"的信号。**
+5. **Phase 3.5 META+源索引完稿**：
+   - META 完成（必答 10 个问题见 `references/file-contracts.md`）
+   - 源材料索引完成
 
-> **多源场景（Phase 0.75 走过）的衔接**：Phase 0.75 只做了源级探查（简码/层级/真相校准）。**大纲在 Phase 1 定出章/单元后，紧接着回填源材料索引的第二层——每章→源文件行号映射**（见 `references/outline-and-analysis.md` §四的两层说明）。别在没有章时硬建章级映射。
+不变量底线见 `references/invariants.md`——任何设计都不能违反。
 
-> **单源场景的替代做法**：虽然不建独立的源材料索引文件，但索引的四要素中仍有几样对单源有价值——把预抽关键条目融入 OUTLINE 的知识点表（加一列"源行号"）、高频陷阱直接写进各单元的 Common Misconception 板块、写作惯例在金标准后回填到 META。这样单源也能受益，不为此建额外文件。
+## 关键工程原则
 
-**Phase 2 金标准**：先只写**一个**单元并审到满意（选有强推导链、体感峰值的单元），拿它跑 L5 教学测试（见 `references/audit-and-testing.md`）。**没有金标准就并行写多单元 = 各 agent 必然漂移**。金标准扛住测试后，才作为范例进入所有 writing agent 的必读列表。
+- **金标准先行**：没有金标准就并行 = agent 必然漂移
+- **一个 agent 只写一章**，避免长上下文漂移
+- **断言可追溯**：每写一条定义/公式/偏好判断，都能回源或回判断根
+- **防螺旋**：Phase 3 定稿后不允许加章/附录/机制板块，新需求先问"能不能塞进现有结构"
+- **交付前必拆脚手架**
 
-**Phase 3 并行铺单元**：每个 writing sub-agent 只写一个单元，其 prompt 必带三样：① 金标准单元全文（作范例）② `META.md` + `OUTLINE.md`（规范 + 该单元在知识链中的位置和跨单元引用）③ 幻觉 gate 完整 4 条铁律（见 `references/audit-and-testing.md` §6.4）——核心口诀"每写一条具名引用/数字/定义前问自己愿不愿打赌是真的，有犹豫就降级为间接转述"。**一个 agent 只做一件事**，避免长上下文漂移。
+## 参考文件按需加载
 
-## ⚠️ Phase 0 前置：申请 MinerU API Token
+| 场景 | 参考文件 |
+|---|---|
+| Phase 1 PDF 转换 | scripts/ 说明 |
+| Phase 2 源探查 | `references/source-material.md` |
+| Phase 3 四文件契约 | `references/file-contracts.md` |
+| Phase 3 模式选型 | `references/patterns/README.md` |
+| Phase 3 不变量底线 | `references/invariants.md` |
+| Phase 3 板块语法起点 | `references/chapter-grammar-starter.md` |
+| Phase 3 路线差异 | `references/two-routes.md` |
+| Phase 4-5 审计 | `references/audit-and-testing.md` |
+| Phase 6 交付 | `references/delivery-checklist.md` |
+| 避坑 | `references/anti-patterns.md` |
 
-PDF→Markdown 默认走 **MinerU 在线 API**（`mineru.net`）。**开跑前先让用户完成这一步**：
+## ⚠️ Phase 1 前置：MinerU API Token
 
-0. **定位 skill 脚本目录 + 装依赖**（脚本在 skill 安装目录，不在你的项目里）：
+PDF→Markdown 默认走 MinerU 在线 API（`mineru.net`）。开跑前让用户完成：
+
+0. 定位 skill 脚本目录 + 装依赖：
    ```bash
    SKILL_DIR=$(dirname "$(find ~/.claude -name SKILL.md -path '*craft-your-textbook*' | head -1)")
-   pip install -r "$SKILL_DIR/scripts/requirements.txt"   # 就一个 requests
+   pip install -r "$SKILL_DIR/scripts/requirements.txt"
    ```
-   把要用的脚本复制进项目：`cp "$SKILL_DIR/scripts/"*.py <项目根>/scripts/`
-1. 打开 **https://mineru.net** 注册/登录
-2. 进入「API」/ 个人中心，**申请 API Token**（有免费额度，造书够用）
-3. 把 Token 设为环境变量（**切勿硬编码进脚本，会泄漏**）：
-   ```bash
-   export MINERU_TOKEN="你的token"    # Git Bash / Linux / Mac
-   # PowerShell: $env:MINERU_TOKEN="你的token"
-   ```
-4. 运行 `python <项目根>/scripts/01_pdf_to_md.py <PDF路径> source-md/`
+   复制脚本：`cp "$SKILL_DIR/scripts/"*.py <项目根>/scripts/`
+1. 打开 https://mineru.net 注册申请 API Token
+2. 设环境变量：`export MINERU_TOKEN="你的token"`
+3. 运行 `python <项目根>/scripts/01_pdf_to_md.py <PDF路径> sources-md/`
 
-> **理科教材**：改 `01_pdf_to_md.py` 里 `ENABLE_FORMULA = True` 保留公式识别。
-> **备选方案**：不想用在线 API，可换本地 `marker-pdf`（先 `pip install marker-pdf`，首次运行会自动下载模型；再 `marker_single input.pdf --output_dir source-md/ --disable-ocr`）——但 MinerU VLM 对扫描版教材版面识别更准，是默认推荐。
-> **已有 Markdown 的情况**：若你手上已经是教材的 Markdown（不必是 PDF），可跳过 Phase 0，直接从 Phase 0.5/1 开始。
-
-## 参考文件（按需加载，不要一次全读）
-
-- **分析源 MD + 设计大纲 + 写附录时（Phase 0.5/1/4）** → 读 `references/outline-and-analysis.md`（怎么读 MinerU 的 MD、抓 Scope and sequence 总表、切单元、写差异报告、落成 OUTLINE.md 五项、附录怎么写见第八节）
-- **写单元时** → 读 `references/unit-template.md`（7 板块模板 + 四条设计原则 + 弹药库按学科定制 + 禁用词表）
-- **仅语言类教材（处理生词时）** → 读 `references/vocabulary-strategy.md`（L1-L4 分层 + 三动作）。数学/历史/编程等非语言学科**跳过此文件**——弹药库不含"词汇/音标/生词"维度
-- **审校/教学测试时** → 读 `references/audit-and-testing.md`（五层审计 + L5 教学测试 + 幻觉 gate）
-- **交付前拆脚手架 + 质量门** → 读 `references/delivery-checklist.md`（8 类元数据 + 6 项质量门）
-- **易踩的坑** → 读 `references/anti-patterns.md`（反模式速查 + 工程陷阱）
-
-## 示例脚本（复制进项目再改，不改 skill 原件）
-
-`scripts/` 里三个脚本是**示例模板**，不是即插即用的通用工具。造书时的正确用法：**把用得到的脚本复制进你的造书项目**（约定放 `<项目根>/scripts/`），按本书实际情况改顶部常量后再跑。skill 目录里的原件保持不动（它是范本，且插件更新会覆盖它）。
-
-> **配置时机**：复制脚本（Phase 0 前置）和改脚本配置是**两件事，别在 Phase 0 就想把三个脚本全配好**。`01_pdf_to_md.py` 的转换参数 Phase 0 就要改；但 `merge_book.py` 的 `UNIT_FILES`/`APPENDIX_FILES` 依赖 OUTLINE.md 定稿后的单元清单，**要等 Phase 1 大纲定稿、甚至 Phase 6 合并前才填得出来**——Phase 0 只管复制进来即可，用到哪个再配哪个。
-
-- `scripts/01_pdf_to_md.py` —— Phase 0：MinerU API 把 PDF 转 Markdown。Token 从 `MINERU_TOKEN` 环境变量读，用法 `python 01_pdf_to_md.py <PDF> <输出目录>`。**复制后按需改**：顶部 `MODEL_VERSION/ENABLE_FORMULA/ENABLE_TABLE/LANGUAGE` 转换参数（理科开 `ENABLE_FORMULA`）。
-- `scripts/merge_book.py` —— 合并所有单元 + 附录为 `BOOK.md`（含目录、Part 分隔、锚点）。**复制后必改**：`DEFAULT_BASE_DIR`、`HEADER`（书名/画像）、`UNIT_FILES`/`APPENDIX_FILES`/`STARTER_FILE`（换成本书的单元清单——示例里是那本英语书的 6 个单元）。**可重跑**：改完单元重跑即可。
-- `scripts/strip_meta_sections.py` —— 删除单元源文件末尾的 `## 📋 自检清单` / `## 📜 版本记录` 板块（Phase 8）。**复制后**用参数指向本书单元目录或改 `DEFAULT_UNIT_DIR`。删完必须重跑 `merge_book.py`。
-
-**依赖**：`01_pdf_to_md.py` 需要 `requests`——先 `pip install -r scripts/requirements.txt`（或 `pip install requests`）。**所有脚本都不含明文密钥**——MinerU Token 一律走环境变量，复制进项目、提交前都 grep 一遍确认无明文 token。
-
-## 标准目录结构
-
-造书项目（脚本产出物写到这里；脚本本身留在 skill 的 `scripts/`）：
-
-```
-project-folder/                    # 如 english-book-八下/
-├── scripts/                        # 从 skill 复制来的示例脚本，按本书改
-│   ├── 01_pdf_to_md.py
-│   ├── merge_book.py
-│   └── strip_meta_sections.py
-├── source-md/full.md              # 学生用书 MD
-├── source-md-teacher/full.md      # 教师用书 MD（师生合版才有）
-├── volume-1-units/                # 单元源文件 unit-00-starter.md ... unit-06-*.md
-├── appendix/                      # appendix-A-*.md, appendix-B-*.md
-├── META.md                        # 写作规范
-├── OUTLINE.md                     # 大纲
-├── DIFF-STUDENT-TEACHER.md        # 差异报告（师生合版才有）
-├── 源材料索引.md                   # 源材料索引（多份异构源才有；份数少时可并入 OUTLINE.md）
-├── L5-dialogue.md                 # L5 教学测试的对话记录（跑路径 A 时的临时产物，验收后可删）
-└── BOOK.md                        # ★ 最终产出（AI 老师读这个），由 merge_book.py 生成
-```
-
-> **多卷书**：`merge_book.py` 默认只合并 `volume-1-units/`，分多卷时改你项目里那份脚本的 `UNIT_FILES`/units_dir。
+理科改 `ENABLE_FORMULA = True`。已有 MD 跳过 Phase 1。
 
 ## 一句话核心
 
-> 书是给 AI 苏格拉底老师的教学蓝本，用户不读书，只跟 AI 老师对话。所有 voice/结构/弹药规则都按"AI 老师会怎么用这一块"设计。**默认师生合版**：优先要到学生用书 + 教师用书两份源一起送入管线；只有一份先确认版本身份；用户明说"什么都没有"才从零造（Mode A）。**流程**：先出大纲（带跨单元关联表）再造，先写一节金标准再并行。**交付前必拆脚手架**：最终 BOOK.md 零过程元数据。**6 项质量门全绿才交付。**
+> 书是给 AI 老师或人读的教学素材，学生主要跟 AI 老师对话。触发后先定路线；不套模板，Phase 3 自己设计书的形状——不变量是底线、模式库是菜单、四文件契约强制回答设计问题。**先出设计再写正文，先写金标准再并行，交付前必拆脚手架。**
