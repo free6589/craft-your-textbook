@@ -39,7 +39,7 @@ format: pure-blueprint | human-readable
 5. **跨章引用机制**：本书用什么形式做知识回扣（行内回溯/连接表/主题低音线）——说清具体形式。
 6. **附录汇编策略**：从哪些章末板块自动汇编成哪些附录。
 7. **贯穿案例/主角约定**（如选了 narrative 卡）：案例/主角是什么，边界在哪（如"不写人物情感弧线"）。
-8. **BOOK.md loader 指令内容**（human-readable 路线）：告诉 AI 老师怎么用这本书的一段话。
+8. **BOOK.md loader 指令内容**（human-readable 路线）：merge_book.py 内置标准 loader 模板（"正文 prose 是素材库用自己的话重组教学；章末教学区照问题链走"），如需针对本书定制措辞，修改脚本中 LOADER_TEMPLATE 即可。pure-blueprint 路线不注入 loader。
 
 ---
 

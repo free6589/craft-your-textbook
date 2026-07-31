@@ -17,7 +17,7 @@ BOOK*.md
 .vscode/
 Thumbs.db
 .superpowers/
-*docs/
+/docs/
 # 密钥（务必不要提交）
 .env
 .claude/

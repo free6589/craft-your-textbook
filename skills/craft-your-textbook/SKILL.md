@@ -122,6 +122,10 @@ PDF→Markdown 默认走 MinerU 在线 API（`mineru.net`）。开跑前让用�
    ```bash
    # 依次在用户级、项目级目录查找 skill 位置，取第一个命中
    SKILL_DIR=$(dirname "$({ find ~/.claude -name SKILL.md -path '*craft-your-textbook*' 2>/dev/null; find . -name SKILL.md -path '*craft-your-textbook*' 2>/dev/null; } | head -1)")
+   if [ -z "$SKILL_DIR" ]; then
+     echo "错误：找不到 craft-your-textbook skill 目录。请确认已正确安装（见 README 安装节）。"
+     return 1 2>/dev/null || exit 1
+   fi
    pip install -r "$SKILL_DIR/scripts/requirements.txt"
    ```
    复制脚本：`cp "$SKILL_DIR/scripts/"*.py <项目根>/scripts/`

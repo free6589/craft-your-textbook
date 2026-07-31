@@ -7,7 +7,7 @@
     {
       "name": "craft-your-textbook",
       "source": "./",
-      "description": "亲手为自己造一本 AI 苏格拉底老师能直接用来上课的教学蓝本（应试特调）。适用任何学科。"
+      "description": "亲手为自己造一本教材——AI 苏格拉底老师用的教学蓝本（pure-blueprint）或给人读的流畅教材（human-readable，AI 也能直接教）。适用任何学科，有教师用书可直接针对应试。"
     }
   ]
 }
