@@ -1,119 +1,115 @@
 # -*- coding: utf-8 -*-
 """
-合并脚本【示例模板】：将所有单元源文件 + 附录文件合并为 BOOK.md。
-产出含目录、Part 分隔、节间锚点，文件头带书名/画像说明。
+合并脚本【示例模板】：将 chapters/ 下所有章 + appendix/ 下所有附录合并为 BOOK.md。
 
-★★ 本文件是**示例**，里面的 UNIT_FILES 等是那本示范英语书的具体值。
-    造你自己的书时：复制进项目（约定放 <项目根>/scripts/）→ 按下面「新项目需调整的地方」
-    改成本书的单元清单再跑。**不要直接改 skill 目录里的原件**（每本书清单不同，且会被插件更新覆盖）。
+★★ 本文件是示例模板。造书时复制进项目（<项目根>/scripts/）→ 按需改顶部 HEADER 再跑。
+    脚本自动扫描 chapters/ 和 appendix/ 目录，按文件名字典序合并。
 
 用法：
-    python merge_book.py [项目根目录]
-    # 省略参数时默认用下面的 DEFAULT_BASE_DIR
+    python merge_book.py [项目根目录] [--strip-frontmatter]
 
-设计要点：可重跑——每次改完单元文件，重跑脚本即可重新生成 BOOK.md。
-
-★ 复制到项目后需调整的地方：
-    1. DEFAULT_BASE_DIR：项目根目录
-    2. header：书名、画像、目录（勿写版本号——版本是过程元数据，Phase 9 质量门会拦 v1.0/v1.1）
-    3. UNIT_FILES：单元文件名 → 锚点 的映射
-    4. APPENDIX_FILES：附录文件名 → 锚点 的映射
-    5. STARTER_FILE：若无 Starter 预备单元则设为 None
+设计要点：
+- 读 META.md 顶部 YAML format 字段判断路线
+- human-readable 路线在 BOOK.md 顶部注入 loader 指令
+- 可重跑
 """
 import os
+import re
 import sys
+from pathlib import Path
 
-DEFAULT_BASE_DIR = r"./english-book-XX"  # 占位：请传参 python merge_book.py <项目根> 或改此值
+DEFAULT_BASE_DIR = "."
 
-# ── 单元 / 附录 / Starter 配置（新项目按需改）────────────────────────
-STARTER_FILE = "unit-00-starter.md"          # 无预备单元则设 None
-UNIT_FILES = [
-    ("unit-01-a-new-start.md", "unit-1"),
-    ("unit-02-more-than-fun.md", "unit-2"),
-    ("unit-03-family-ties.md", "unit-3"),
-    ("unit-04-time-to-celebrate.md", "unit-4"),
-    ("unit-05-power-of-plants.md", "unit-5"),
-    ("unit-06-fantastic-friends.md", "unit-6"),
-]
-APPENDIX_FILES = [
-    ("appendix-A-vocabulary.md", "appendix-a"),
-    ("appendix-B-grammar.md", "appendix-b"),
-]
 
-HEADER = """# [书名] · 苏格拉底教学蓝本
+def read_meta_format(base_dir):
+    """读 META.md 顶部 YAML 的 format 字段。"""
+    meta_path = Path(base_dir) / "META.md"
+    if not meta_path.exists():
+        return "pure-blueprint"
+    content = meta_path.read_text(encoding="utf-8")
+    # 匹配顶部 --- ... --- 之间的 YAML
+    m = re.match(r"^---\s*\n(.*?)\n---", content, re.DOTALL)
+    if not m:
+        return "pure-blueprint"
+    yaml_text = m.group(1)
+    fm = re.search(r"^format:\s*(.+)$", yaml_text, re.MULTILINE)
+    return fm.group(1).strip() if fm else "pure-blueprint"
 
-> **本书定位**：这是给 AI 苏格拉底老师的**教学蓝本**（pedagogical spec），不是给学生读的书。
-> 学生只跟 AI 老师对话，不读本蓝本；AI 老师读蓝本，用引导式提问教学生。
-> AI 老师的人设由用户单独定义，本蓝本不含教学风格部分。
 
-**学习者画像**：[画像]。
-**组织方式**：[按单元顺序 / 按主题]。
+def load_chapters(base_dir):
+    """递归扫描 chapters/ 下所有 *.md，按文件名字典序排序。"""
+    chapters_dir = Path(base_dir) / "chapters"
+    if not chapters_dir.exists():
+        return []
+    files = sorted(chapters_dir.rglob("*.md"))
+    return files
+
+
+def load_appendices(base_dir):
+    """扫描 appendix/ 下所有 *.md，按文件名字典序排序。"""
+    app_dir = Path(base_dir) / "appendix"
+    if not app_dir.exists():
+        return []
+    files = sorted(app_dir.glob("*.md"))
+    return files
+
+
+def strip_frontmatter(content):
+    """剥离 YAML frontmatter（--- ... ---）。"""
+    return re.sub(r"^---\s*\n.*?\n---\n?", "", content, count=1, flags=re.DOTALL)
+
+
+LOADER_TEMPLATE = """> **AI 老师使用说明**：本书是给人读的流畅教材。正文 prose 是素材库，用你自己的话重组教学；
+> 每章末尾的思考题/练习区是提问路线图，请照那些问题的层次引导学生。
 
 ---
 
-## 📑 目录
-
-[按需补充目录，锚点与下方 anchor 对应]
-
----
 """
-
-
-def read_unit(path):
-    with open(path, "r", encoding="utf-8") as f:
-        content = f.read()
-    if not content.endswith("\n"):
-        content += "\n"
-    return content
 
 
 def main():
-    base_dir = sys.argv[1] if len(sys.argv) > 1 else DEFAULT_BASE_DIR
-    units_dir = os.path.join(base_dir, "volume-1-units")
-    appendix_dir = os.path.join(base_dir, "appendix")
+    args = [a for a in sys.argv[1:] if not a.startswith("--")]
+    flags = [a for a in sys.argv[1:] if a.startswith("--")]
+    base_dir = args[0] if args else DEFAULT_BASE_DIR
+    do_strip = "--strip-frontmatter" in flags
 
-    parts = [HEADER]
+    fmt = read_meta_format(base_dir)
+    chapters = load_chapters(base_dir)
+    appendices = load_appendices(base_dir)
 
-    # Part 1 · 预备单元
-    if STARTER_FILE:
-        parts.append("\n# Part 1 · 预备单元\n\n")
-        parts.append('<a id="starter"></a>\n\n')
-        parts.append(read_unit(os.path.join(units_dir, STARTER_FILE)))
+    parts = []
+    if fmt == "human-readable":
+        parts.append(LOADER_TEMPLATE)
 
-    # Part 2 · 正式单元
-    parts.append("\n# Part 2 · 正式单元\n\n")
-    for filename, anchor in UNIT_FILES:
-        parts.append(f'<a id="{anchor}"></a>\n\n')
-        parts.append(read_unit(os.path.join(units_dir, filename)))
-        parts.append("\n")
+    for ch in chapters:
+        content = ch.read_text(encoding="utf-8")
+        if do_strip:
+            content = strip_frontmatter(content)
+        if not content.endswith("\n"):
+            content += "\n"
+        parts.append(content)
+        parts.append("\n---\n\n")
 
-    # Part 3 · 附录
-    parts.append("# Part 3 · 附录\n\n")
-    for filename, anchor in APPENDIX_FILES:
-        parts.append(f'<a id="{anchor}"></a>\n\n')
-        parts.append(read_unit(os.path.join(appendix_dir, filename)))
-        parts.append("\n")
+    if appendices:
+        parts.append("# 附录\n\n")
+        for ap in appendices:
+            content = ap.read_text(encoding="utf-8")
+            if do_strip:
+                content = strip_frontmatter(content)
+            if not content.endswith("\n"):
+                content += "\n"
+            parts.append(content)
+            parts.append("\n")
 
-    output_path = os.path.join(base_dir, "BOOK.md")
-    with open(output_path, "w", encoding="utf-8") as f:
-        f.write("".join(parts))
+    output_path = Path(base_dir) / "BOOK.md"
+    output_path.write_text("".join(parts), encoding="utf-8")
 
-    # ── 统计 + 验证 ──────────────────────────────────────────────
-    size = os.path.getsize(output_path)
-    with open(output_path, "r", encoding="utf-8") as f:
-        book = f.read()
-    lines = book.count("\n")
+    size = output_path.stat().st_size
+    lines = output_path.read_text(encoding="utf-8").count("\n")
     print(f"合并完成：{output_path}")
+    print(f"路线：{fmt}")
+    print(f"章数：{len(chapters)}，附录：{len(appendices)}")
     print(f"文件大小：{size:,} 字节 / {lines:,} 行")
-
-    anchors = (["starter"] if STARTER_FILE else []) \
-        + [a for _, a in UNIT_FILES] + [a for _, a in APPENDIX_FILES]
-    for a in anchors:
-        mark = "✓" if f'<a id="{a}"></a>' in book else "✗ 缺失"
-        print(f"  {mark} 锚点 {a}")
-    for p in ["Part 1", "Part 2", "Part 3"]:
-        mark = "✓" if p in book else "✗ 缺失"
-        print(f"  {mark} {p}")
 
 
 if __name__ == "__main__":
