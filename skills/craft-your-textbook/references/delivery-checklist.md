@@ -24,7 +24,7 @@ Phase 6 终检与交付包含三步，别混淆：
 
 | 检查项 | 命令（在项目根跑） | 判据 |
 |---|---|---|
-| 禁用词 | `grep -rn "AI\|伴读\|指挥官\|prompt\|批量指挥\|对话框\|Socratopia\|让学生" chapters/ appendix/` | 0（"AI 老师"是合法的，人工确认） |
+| 禁用词 | `grep -rn "AI\|伴读\|指挥官\|prompt\|批量指挥\|对话框\|Socratopia\|让学生" chapters/ appendix/ | grep -v 'AI 老师'` | 0（剩余裸 "AI" 命中人工确认是否合法） |
 | 乱码 U+FFFD | `grep -rn $'�' chapters/ appendix/`（UTF-8 locale 下；或 `rg "\x{FFFD}"`） | 0（MinerU OCR 残留的替换字符全部改掉） |
 | 板块齐全 | 每个章都包含 style-spec §章内板块语法定义的必含板块（不是硬编码 7 板块，按本书设计核对） | 齐全 |
 | 跨章引用 | 每处跨章引用指向真实存在的章/概念 | 无空指 |
@@ -101,8 +101,12 @@ python scripts/merge_book.py --strip-frontmatter
 | ② 禁用词 | 从 style-spec §正文语言风格 读本书特有禁用词表，grep BOOK.md；"AI"单独查后**人工确认** | = 0（"AI 老师"等合法词人工放行） |
 | ③ 元数据残余 | grep META 声明的脚手架标题列表 | = 0 |
 | ④ 章数 | 从 OUTLINE §逐章骨架 读预期章数，grep 章标题（格式从 style-spec 读，不是硬编码 `^# Unit`） | = 预期章数 |
-| ⑤ 跨章引用 | 逐章检查行内回溯/连接表/交叉引用指向的章/概念真实存在（Phase 5.3 已做，此步抽查） | 无空指 |
-| ⑥ 文件大小 | 合并后字节数 | **首本书**：记录本次字节数作为 baseline；**重跑时**：与上次 baseline 相比 ±10% |
+| ⑤ 跨章引用 | 随机抽查 3 章，验证行内回溯/连接表/交叉引用指向的章/概念真实存在（Phase 5.3 已做全量检查，此步兜底抽查） | 无空指 |
+| ⑥ 文件大小 | 合并后字节数 | **首本书**：记录本次字节数作为 baseline（见下）；**重跑时**：与上次 baseline 相比 ±10% |
+
+**判据⑥ baseline 持久化方法**：baseline 写入项目根目录的 `.book-baseline` 文件（单行字节数），跨会话可读。
+- 首本书记录：`wc -c < BOOK.md | tr -d ' ' > .book-baseline`
+- 重跑对比：`CURRENT=$(wc -c < BOOK.md | tr -d ' '); BASELINE=$(cat .book-baseline); echo "current=$CURRENT baseline=$BASELINE";  DIFF=$(( (CURRENT - BASELINE) * 100 / BASELINE )); echo "diff=${DIFF}%"; [ "${DIFF#-}" -le 10 ] && echo OK || echo FAIL`
 
 判据①②③④的具体值从四文件派生：
 - 必含板块清单：读 style-spec §章内板块语法
@@ -113,4 +117,4 @@ python scripts/merge_book.py --strip-frontmatter
 
 **任何一项不过，修完重跑。**
 
-> 注：判据②的禁用词表和判据③的元数据关键词需按具体项目调整（不同项目平台术语不同）。gate② 的"AI"检测靠人工放行"AI 老师"——因为它是全书合法高频词，任何自动排除都可能漏检行尾/换行处的 AI，人工过一遍最稳。
+> 注：判据②的禁用词表和判据③的元数据关键词需按具体项目调整（不同项目平台术语不同）。上方 grep 已用 `grep -v 'AI 老师'` 预过滤最常见的合法命中，剩余裸"AI"命中再人工确认——任何自动排除都可能漏检行尾/换行处的 AI。
