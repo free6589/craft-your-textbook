@@ -14,7 +14,7 @@ PMP 是认证类，选"认证应试蓝本"预装配包，拿到 14 张候选卡�
 
 ### 第二步：本书特化裁剪
 
-1. **砍小说层**：PMP v6 定稿砍人物情感弧线 → 拒绝 character-protagonist
+1. **砍小说层**：PMP 定稿砍人物情感弧线 → 拒绝 character-protagonist
 2. **替代提问卡**：认证类需要应试反射 → 用 quick-judgment（速判）+ judgment-card（首选卡）组合，替代 socratic-questioning（探索脚本保留但作为 judgment 配套）
 3. **加硬记/判断分离**：PMP 有大量"框架名要背、何时用要推"的知识 → fact-vs-judgment 必选
 

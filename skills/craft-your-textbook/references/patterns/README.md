@@ -60,7 +60,7 @@
 ### AI 教学蓝本（K-12/技能）
 **适合**：英语教材/编程入门/数学
 **预打包**：socratic-questioning + precise-definition + worked-example + scenario-hook + vocabulary-dimension（语言类）+ cross-ref-trace
-**典型样本**：本 skill v6 的英语七上教材模板
+**典型样本**：本 skill 的英语七上教材模板
 
 ---
 
@@ -68,7 +68,7 @@
 
 ### PMP 认证蓝本（human-readable，认证应试起点）
 **选用**：precise-definition、misconception、judgment-card（"PMI 会怎么选"板块）、quick-judgment（速判脚本）、fact-vs-judgment（硬记锚 vs 判断分离铁律）、deterministic-anchor（本章硬记锚）、practice-gradient（探索脚本→速判脚本二级梯度）、multi-source-arbitration（ECO/PMBOK7/过程组三源冲突表述范式）、foundation-chapter（Ch2 十二原则/Ch3 八绩效域）、capstone-chapter（Ch18 PMI 思维总集）、cross-ref-trace（"回溯 Ch2 原则6"行内回溯）、appendix-compilation（附录 A/B/C 从硬记锚/速判/eco_tasks 汇编）、scenario-hook（锦程建工医院项目）、running-case（锦程建工贯穿项目）
-**拒绝**：character-protagonist（v6 定稿砍小说层，不用第二人称主角）、socratic-questioning（被探索脚本+速判脚本替代）
+**拒绝**：character-protagonist（PMP 定稿砍小说层，不用第二人称主角）、socratic-questioning（被探索脚本+速判脚本替代）
 
 ### CPA 审计教材（human-readable，叙事入门起点）
 **选用**：precise-definition（Definition 双讲）、misconception（Common Misconception）、socratic-questioning（探索脚本）、application-problem（Application Problems）、worked-example（审计程序设计题）、scenario-hook（华明制造开章）、character-protagonist（老周/注册会计师视角）、running-case（华明制造贯穿案例）、recurring-leitmotif（职业怀疑/风险→程序→证据→结论/华明低音线）

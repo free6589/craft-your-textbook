@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 """
-造书 Phase 0：PDF → Markdown（MinerU 在线 API 方案）
+造书 Phase 1：PDF → Markdown（MinerU 在线 API 方案）
 
 ★★ 本文件是**示例模板**。请复制进你的造书项目（约定放 <项目根>/scripts/）后，
     按需改顶部「转换参数」常量再跑——不要直接改 skill 目录里的原件（会被插件更新覆盖）。
