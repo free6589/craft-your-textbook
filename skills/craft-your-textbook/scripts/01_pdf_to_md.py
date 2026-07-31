@@ -17,8 +17,7 @@
 用法：
     export MINERU_TOKEN="..."
     python 01_pdf_to_md.py <输入PDF路径> <输出目录>
-    # 例：python 01_pdf_to_md.py "教材.pdf" source-md/
-    # 师生合版：教师用书再跑一次，输出到 source-md-teacher/
+    # 例：python 01_pdf_to_md.py "教材.pdf" sources-md/
 
 流程（MinerU v4 API）：
     1. 申请批量上传链接（POST /api/v4/file-urls/batch）
