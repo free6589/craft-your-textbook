@@ -117,6 +117,9 @@ Mode A（无源）下替代机制：每个断言必须能通过 L5 教学测试�
 **I8. 交付前拆脚手架**
 过程元数据（自检清单/版本记录/写作惯例注释等）交付前必须拆干净。脚手架标题列表由 META 声明（每本书可能不同），不硬编码。
 
+**I9. 防螺旋铁律**
+方案定稿后不允许新增章/附录/机制级板块。新需求先问"能不能塞进现有结构"，不能才考虑，且需砍掉等量的东西并回炉 Phase 3。
+
 ---
 
 ## 三、参考模式库
@@ -190,7 +193,7 @@ references/patterns/
 
 1. **什么时候读我**：Phase 3.3 模式选型时全读；Phase 4/5 写章时按 style-spec 重读具体卡。
 2. **卡的分层说明**：structure/ 是整书架构层（Phase 3.4 用），其他目录是章内板块层（Phase 3.3 用），language-learning/ 是领域特化层。
-3. **注意力引导（替代 v6 features 开关）**：根据 Phase 3.1 识别的教学目标，提示 Agent 优先看哪些卡（如"认证应试目标→优先看 assessment/ 下 judgment-card/quick-judgment/fact-vs-judgment 等"）。这不是强制，是注意力引导。
+3. **注意力引导（替代 v6 features 开关）**：根据 Phase 3.1 识别的教学目标，提示 Agent 优先看哪些卡（如"认证应试目标→优先看 judgment-card / quick-judgment / fact-vs-judgment / deterministic-anchor / multi-source-arbitration 等卡"）。这不是强制，是注意力引导。
 4. **模式选型流程三步**：
    - 带 Phase 3.1 识别的教学问题翻卡
    - 回答两个强制问题（见 §3.4）
@@ -228,7 +231,7 @@ Agent 在 Phase 3.3 必须在 `style-spec §模式选型说明` 里显式回答�
 | **Phase 1** | 源材料准备 | PDF→MD（MinerU API）+ 脚本复制进项目 + 依赖安装。已有 MD 则跳过转换。 | `sources-md/` 源 MD；`scripts/` 脚本副本 |
 | **Phase 2** | 源探查 | **所有有源书必走**（深度按源数量自度：单教材极浅，多源厚重）：摸源结构、登记角色标签、建简码表、定权威层级、做真相校准。师生合版场景在此步做"教师用书独有内容比对"（方法学见 source-material.md）。 | `源材料索引.md` 第一层（源级探查表） |
 | **Phase 3** | 教学设计 | 五步拆解 + 三个用户确认关卡（见 §五） | META.md、OUTLINE.md、style-spec.md、`源材料索引.md` 第二层（章级映射回填完） |
-| **Phase 4** | 金标准验证 | 选一章（强推导链、体感峰值）按 style-spec 板块语法写 → 五层审计 + L5 教学测试 → 通过后回填 style-spec §金标准写作惯例 | 金标准章 md |
+| **Phase 4** | 金标准验证 | 选一章（强推导链、体感峰值）按 style-spec 板块语法写 → 五层审计 + L5 教学测试 → 通过后回填 style-spec §金标准写作惯例 | 金标准章 md；L5-dialogue.md（L5 教学测试对话记录） |
 | **Phase 5** | 全量写作 + 收网 | 5.1 sub-agent 并行铺其余章（prompt 必带金标准+四文件+幻觉gate+板块语法约束；prompt 要素清单见 audit-and-testing.md §sub-agent-prompt）→ 5.2 附录汇编（按 OUTLINE §附录汇编策略）→ 5.3 跨章审计（含板块语法一致性审计）→ 5.4 合并 BOOK.md（human-readable 注入 loader 指令） | chapters/、appendix/、BOOK.md |
 | **Phase 6** | 终检与交付 | 终检（禁用词/乱码/板块计数从 style-spec 派生/引用）→ 拆脚手架（脚手架标题从 META 读）→ 质量门（从四文件契约派生检查项）→ 交付 | 纯净 BOOK.md |
 
@@ -309,7 +312,7 @@ Phase 3 完成标志：META/OUTLINE/style-spec/源材料索引四文件齐备，
 
 ### META.md 必答问题
 
-1. 本书定位（一句话+format 声明）
+1. 本书定位（一句话；路线已在顶部 YAML `format` 字段声明，此处不重复）
 2. 防幻觉铁律（最危险断言类型+回源到哪+追不到怎么降级）
 3. 读者意识声明（第一读者是谁+写每块前问什么）
 4. 章内板块语法（从 Phase 3.3 搬过来）
@@ -317,7 +320,7 @@ Phase 3 完成标志：META/OUTLINE/style-spec/源材料索引四文件齐备，
 6. 写作纪律（agent 分配/并行度/字数参考/排除项）
 7. frontmatter schema（需要则定义章级字段+校验规则；不需要则显式声明"本书无章级 frontmatter"）
 8. AI 老师使用方式
-9. 防螺旋铁律
+9. 防螺旋铁律（I9）
 10. 脚手架标题列表（Phase 6 拆脚手架用）
 
 ### OUTLINE.md 必答问题
@@ -356,7 +359,7 @@ Mode A 不建此文件，META 里声明知识密度自评+L5 强制路径。
 | 维度 | pure-blueprint | human-readable |
 |---|---|---|
 | Phase 3.2 决策 | `format: pure-blueprint` | `format: human-readable` |
-| 不变量约束 | I1-I6 | I1-I4 + H1-H3 |
+| 内容不变量约束 | I1-I6 | I1-I4 + H1-H3（过程不变量 I7-I9 两路线同等适用） |
 | 板块语法（Phase 3.3） | 可含显式元指令块/技术回溯/emoji 标题/yaml frontmatter | 正文 prose 化，元指令集中章末教学区 |
 | 章级 frontmatter | 可选且常用（yaml 做 grep 校验） | 默认无，META 显式声明 |
 | Phase 5.4 合并 | 正常合并 | BOOK.md 顶部注入 loader 指令 |
