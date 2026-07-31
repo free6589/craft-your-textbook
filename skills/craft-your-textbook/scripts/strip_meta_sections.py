@@ -1,67 +1,89 @@
 # -*- coding: utf-8 -*-
 """
-拆脚手架脚本【示例模板】（造书 Phase 8）：
-删除每个单元源文件末尾的"📋 自检清单"和"📜 版本记录"两个板块。
-这两类是造书者的 QA 笔记/修订日志，对 AI 老师教学零价值。
+拆脚手架脚本【示例模板】（造书 Phase 6）：
+删除章文件末尾的"脚手架"板块（自检清单/版本记录/写作笔记等写作过程元数据）。
 
-★★ 本文件是**示例**。复制进项目（约定放 <项目根>/scripts/）后，用参数指向本书的单元目录再跑，
-    或改下面的 DEFAULT_UNIT_DIR。**不要直接改 skill 目录里的原件。**
-
-删除范围：从 "## 📋 自检清单" 行到文件末尾（含自检清单 + 版本记录）。
-若文件无自检清单，则回退到 "## 📜 版本记录" 起始。
+★★ 本文件是示例模板。复制进项目后运行。脚手架标题列表从 META.md 读（META #10）。
 
 用法：
-    python strip_meta_sections.py [单元目录]
-    # 省略参数时默认用下面的 DEFAULT_UNIT_DIR
+    python strip_meta_sections.py [目录1] [目录2] ...
+    # 默认递归扫描 chapters/ 和 appendix/
 
 ★ 删完后必须重跑 merge_book.py 重新合并 BOOK.md。
-★ 本脚本只删**单元文件**（unit-*.md）末尾的两个板块；**不处理附录**（附录不套 7 板块模板、
-  没有这两个板块）。附录及正文内散落的版本标记 / "教师用书说" / 造书者口吻，
-  需另行全局清理（见 references/delivery-checklist.md 的 Phase 8 步骤2 + 8 类元数据）。
 """
-from pathlib import Path
+import re
 import sys
+from pathlib import Path
 
-DEFAULT_UNIT_DIR = r"./english-book-XX/volume-1-units"  # 占位：请传参 或改此值
+DEFAULT_DIRS = ["chapters", "appendix"]
 
-CHECKLIST_MARKER = "## 📋 自检清单"
-VERSION_MARKER = "## 📜 版本记录"
+
+def read_scaffold_titles(base_dir):
+    """从 META.md 读脚手架标题列表。
+    预期 META 有一行 "10. 脚手架标题列表" 后跟 markdown 列表。
+    如没找到，返回默认值。
+    """
+    meta_path = Path(base_dir) / "META.md"
+    defaults = ["## 📋 自检清单", "## 📜 版本记录", "## 写作笔记"]
+    if not meta_path.exists():
+        return defaults
+    content = meta_path.read_text(encoding="utf-8")
+    # 找"脚手架标题"section
+    m = re.search(r"脚手架标题[^：]*：?[^\n]*\n((?:[-*]\s+[^\n]+\n)+)", content)
+    if not m:
+        return defaults
+    titles = []
+    for line in m.group(1).strip().split("\n"):
+        line = line.strip().lstrip("-*").strip().strip("`")
+        if line:
+            titles.append(line)
+    return titles if titles else defaults
+
+
+def process_file(path, markers):
+    """从找到第一个 marker 行处截断文件到末尾。返回删除的字符数。"""
+    content = path.read_text(encoding="utf-8")
+    cut_idx = len(content)
+    for marker in markers:
+        idx = content.find(marker)
+        if idx != -1 and idx < cut_idx:
+            cut_idx = idx
+    if cut_idx == len(content):
+        return 0
+    removed = content[cut_idx:]
+    new_content = content[:cut_idx].rstrip() + "\n"
+    path.write_text(new_content, encoding="utf-8")
+    return len(removed)
 
 
 def main():
-    unit_dir = Path(sys.argv[1] if len(sys.argv) > 1 else DEFAULT_UNIT_DIR)
+    args = sys.argv[1:]
+    dirs = args if args else DEFAULT_DIRS
+    base_dir = "."
 
-    total_removed_chars = 0
-    total_removed_lines = 0
+    markers = read_scaffold_titles(base_dir)
+    print(f"脚手架标题：{markers}")
+
+    total_removed = 0
     files_changed = 0
 
-    for uf in sorted(unit_dir.glob("unit-*.md")):
-        content = uf.read_text(encoding="utf-8")
-
-        idx_check = content.find(CHECKLIST_MARKER)
-        idx_ver = content.find(VERSION_MARKER)
-
-        if idx_check != -1:
-            cut_idx = idx_check
-        elif idx_ver != -1:
-            cut_idx = idx_ver
-        else:
-            print(f"[skip] {uf.name}: 未找到 自检清单/版本记录，跳过")
+    for dirname in dirs:
+        d = Path(base_dir) / dirname
+        if not d.exists():
+            print(f"[skip] 目录不存在：{d}")
             continue
-
-        removed = content[cut_idx:]
-        removed_lines = removed.count("\n")
-        new_content = content[:cut_idx].rstrip() + "\n"  # 保留单个末尾换行
-
-        uf.write_text(new_content, encoding="utf-8")
-
-        total_removed_chars += len(removed)
-        total_removed_lines += removed_lines
-        files_changed += 1
-        print(f"[ok]   {uf.name}: 删除 {len(removed):,} 字符 / {removed_lines} 行")
+        for f in sorted(d.rglob("*.md")):
+            removed = process_file(f, markers)
+            if removed > 0:
+                lines = f.read_text(encoding="utf-8").count("\n")
+                print(f"[ok]   {f}: 删除 {removed:,} 字符")
+                total_removed += removed
+                files_changed += 1
+            else:
+                print(f"[skip] {f}: 未找到脚手架标题")
 
     print("-" * 60)
-    print(f"完成：{files_changed} 个文件，共删除 {total_removed_chars:,} 字符 / {total_removed_lines} 行")
+    print(f"完成：{files_changed} 个文件，共删除 {total_removed:,} 字符")
     print("★ 记得重跑 merge_book.py 重新合并 BOOK.md")
 
 
