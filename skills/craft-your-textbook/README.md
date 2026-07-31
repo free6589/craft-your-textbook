@@ -2,7 +2,7 @@
 
 > 本项目是 [Socratopia（破卷）](https://www.socratopia.app/r/SCR-FEJXMQ) 生态的衍生项目，是其"造书"环节的方法论沉淀，已固化为一个可复用的 skill。
 >
-> 让你具备**亲手为自己造一本教材**的能力——把一本教材（或一个领域的知识）加工成 **AI 老师能拿去上课的教学蓝本**。有教师用书时，造出来的书还能**直接针对应试**（见第四节）。
+> 让你具备**亲手为自己造一本教材**的能力——把一本教材（或一个领域的知识）加工成 **AI 老师能拿去上课的教学蓝本**（pure-blueprint），或一本给人读的流畅教材（human-readable，AI 也能直接教）。两种形态触发时自选，默认推荐给 AI 老师的版本。有教师用书时，造出来的书还能**直接针对应试**（见第四节）。
 
 ***
 
@@ -54,7 +54,7 @@ cp -r craft-your-textbook/skills/craft-your-textbook <你的项目>/.claude/skil
 > ⚠️ 最终要让 `SKILL.md` 位于 `.../.claude/skills/craft-your-textbook/SKILL.md`。本仓库里 skill 本体在 `skills/craft-your-textbook/` 子目录下（插件市场结构要求），别把仓库根整个拷进去。
 
 **验证**：在 Claude Code 里说"帮我造一本 XX 教材的教学蓝本"能被识别即成功。
-**依赖**：Phase 0 的 PDF→Markdown 用 [MinerU](https://mineru.net) 在线 API，需自备 API Token（见第六节）；脚本需 Python 3 + `requests`。
+**依赖**：Phase 1 的 PDF→Markdown 用 [MinerU](https://mineru.net) 在线 API，需自备 API Token（见第六节）；脚本需 Python 3 + `requests`。
 
 ***
 
@@ -87,7 +87,7 @@ cp -r craft-your-textbook/skills/craft-your-textbook <你的项目>/.claude/skil
 3. **弹药库** —— 具体案例、例题、词条随取随用
 4. **提问路线图** —— 用什么问题把学生引导到知识点
 
-整本蓝本按 **7 板块单元模板**组织：🎬 场景 / 🧭 你将学会 / 📌 知识锚定（含 `### 💬` 苏格拉底引导方向） / 🎯 弹药库 / 🔗 与后续单元的连接 / 📐 AI 老师备课要点。除 🎯 弹药库按学科定制外，其余板块所有学科通用。
+v7 不再预设固定的板块模板——书的章内结构（板块语法）由 AI 在 Phase 3 根据源材料和教学目标从 20 张模式卡里选型/混搭/新造，落到 `style-spec.md`。典型形态举例：K-12 语言类蓝本常用场景/目标/知识锚定/提问路线/弹药库/跨单元连接/备课要点（7 板块是其中一种组合）；认证类蓝本常用精确呈现/误区桩/判断题/速判脚本/硬记锚（PMP 组合）；叙事教材常用情境钩子/主角/贯穿案例/章末练习（CPA 组合）。模式库按"教学问题"组织，不按学科。
 
 ## 三、理念要点
 
@@ -112,7 +112,7 @@ cp -r craft-your-textbook/skills/craft-your-textbook <你的项目>/.claude/skil
 
 ## 五、适用范围
 
-**任何学科**——英语、语文、数学、物理、历史、编程……都能用。7 板块骨架与学科无关；只有 🎯 弹药库需要按学科换内容（语言类放词汇/音标/语法，理科放公式/定理/例题，文史放史实/人物/时间线）。**词汇、音标、生词分层策略仅语言类教材需要**，其他学科直接跳过。
+**任何学科**——英语、语文、数学、物理、历史、编程、认证考试……都能用。v7 不预设板块骨架，AI 根据教学目标选型：语言类启用词汇分层卡，理科/认证类启用公式/判断题卡，叙事类启用主角/贯穿案例卡。没有"按学科硬分"的表格，只有"按教学问题选模式"。
 
 ## 六、怎么用
 
@@ -139,9 +139,21 @@ cp -r craft-your-textbook/skills/craft-your-textbook <你的项目>/.claude/skil
 
 > 前三行（有源）在 skill 内部统称 **Mode B**，最后一行（无源从零造）称 **Mode A**——你在对话里看到 AI 提"走 Mode B"就是指有源造书。
 
-### 全流程（Phase 0 → 9）
+### 第一步：定路线
 
-AI 会带你从一份 PDF 一路走到成书：**转成文字 → 列大纲 → 先写一个样板单元反复打磨 → 铺开其余单元 → 合并校验交付**。每一步的细节（差异报告、跨单元审计、拆脚手架、质量门等）它自己清楚，你只需在定模式、审大纲、验样板单元这些关键处拍板。
+触发后 AI 会先问你："这本书是喂给 AI 老师教学用的教学蓝本（推荐），还是给人读的流畅教材（AI 也能直接教）？"两种路线互斥选择，默认推荐给 AI 老师的版本。
+
+### 全流程（6 阶段）
+
+AI 会带你从一份 PDF 一路走到成书：
+- **Phase 1 源材料准备**：PDF→Markdown、复制脚本、装依赖
+- **Phase 2 源探查**：摸源结构、登记角色标签、建简码表、定权威层级
+- **Phase 3 教学设计**（核心）：分析目标→定路线→**模式选型**（从 20 张模式卡选/混搭/新造板块）→设计章内语法和整书架构→写四文件
+- **Phase 4 金标准**：选一章按设计写、审计+教学测试通过后回填写作惯例
+- **Phase 5 全量写作**：sub-agent 并行铺章→附录汇编→跨章审计→合并
+- **Phase 6 交付**：终检→拆脚手架→质量门→交付
+
+**v7 核心变化**：不再预设"7 板块模板"让你套。AI 会在 Phase 3 根据你的源材料和教学目标，从模式库（20 张按"教学问题"组织的模式卡）里选型、混搭、甚至新造板块——书的形状由你和 AI 一起设计，而不是预定义。你只需在三个关卡（目标确认、板块语法、全书架构）拍板。
 
 ### ⚠️ 开工前置：申请 MinerU API Token
 
@@ -156,19 +168,28 @@ PDF→Markdown 默认走 MinerU 在线 API。**你需要准备的**：源材料�
 
 ```
 craft-your-textbook/
-├── SKILL.md                        # 主入口：模式决策 + Phase 0→9 全流程导航
+├── SKILL.md                        # 主入口：元方法引导 + 6 阶段流程导航
 ├── README.md                       # 本文件
 ├── references/                     # 按需加载的细则
-│   ├── outline-and-analysis.md     # 分析源 MD + 大纲五项 + 差异报告 + 附录写法（Phase 0.5/1/4）
-│   ├── unit-template.md            # 7 板块模板 + 四条设计原则 + 弹药库按学科定制 + 禁用词
-│   ├── vocabulary-strategy.md      # 生词 L1-L4 分层 + 三动作（仅语言类）
-│   ├── audit-and-testing.md        # 五层审计 + L5 教学测试 + 幻觉 gate
-│   ├── delivery-checklist.md       # Phase 7 终检 + 拆脚手架 8 类元数据 + 6 项质量门
-│   └── anti-patterns.md            # 反模式速查 + 工程陷阱
+│   ├── invariants.md               # 不变量清单（I1-I9/H1-H3，任何书都不能违反）
+│   ├── file-contracts.md           # 四文件（META/OUTLINE/style-spec/源材料索引）必答问题
+│   ├── source-material.md          # 源角色标签 7 类 + 两层索引 + 师生合版比对
+│   ├── two-routes.md               # 两条路线（pure-blueprint/human-readable）决策指引
+│   ├── chapter-grammar-starter.md  # 从模式卡组合章节语法的走查示例
+│   ├── patterns/                   # 参考模式库（20 张卡，按教学问题组织）
+│   │   ├── README.md               # 模式库索引 + 选型流程 + 预装配包 + 三书示例
+│   │   ├── concept-anchoring/      # 概念锚定（精确呈现/误区桩/苏格拉底提问/事实vs判断）
+│   │   ├── assessment/             # 评估练习（判断题/速判/推理题/例题/梯度/必背锚）
+│   │   ├── narrative/              # 叙事结构（情境钩子/贯穿案例/主角）
+│   │   ├── structure/              # 整书架构（地基章/收网章/跨章引用/附录汇编/多源裁决/主题低音）
+│   │   └── language-learning/      # 语言特化（词汇分层）
+│   ├── audit-and-testing.md        # 五层审计 + L5 教学测试 + 金标准门槛 + 幻觉 gate
+│   ├── delivery-checklist.md       # Phase 6 终检 + 拆脚手架 + 质量门（通用化）
+│   └── anti-patterns.md            # 反模式速查（含诚实边界声明）
 └── scripts/                        # 示例脚本模板——造书时复制进项目再按本书改
-    ├── 01_pdf_to_md.py             # Phase 0：MinerU API 转 Markdown（token 走环境变量）
-    ├── merge_book.py               # 合并单元 + 附录为 BOOK.md（可重跑）
-    ├── strip_meta_sections.py      # Phase 8：拆脚手架（可重跑）
+    ├── 01_pdf_to_md.py             # Phase 1：MinerU API 转 Markdown（token 走环境变量）
+    ├── merge_book.py               # Phase 5：合并章 + 附录为 BOOK.md（通用化，读 META format）
+    ├── strip_meta_sections.py      # Phase 6：拆脚手架（从 META 读标题，通用化）
     └── requirements.txt            # 脚本依赖（requests）
 ```
 
@@ -203,7 +224,7 @@ craft-your-textbook/
 
 ## 九、一句话总结
 
-> 书是给 AI 苏格拉底老师的教学蓝本，学生不读书、只跟 AI 老师对话。所有规则都按"AI 老师会怎么用这一块"来设计——**默认师生合版起步，先出大纲再写金标准，交付前拆干净脚手架，6 项质量门全绿才算完。**
+> 书是给 AI 苏格拉底老师或人读的教学素材，学生主要跟 AI 老师对话。触发后先定路线（pure-blueprint 推荐 / human-readable），再用元方法设计书的形状——不变量是底线，模式库是菜单，四文件契约强制回答设计问题。**先出设计再写正文，先写金标准再并行，交付前拆干净脚手架，质量门全绿才算完。**
 
 <br />
 
