@@ -50,7 +50,7 @@ description: 让你具备"亲手为自己造一本教材"的能力——把源�
 | **Phase 2** | 源探查 | 所有有源书必走：摸源结构、角色标签、简码表、权威层级 | `源材料索引.md` 第一层 |
 | **Phase 3** | 教学设计 | **核心阶段**：五步设计（见下）+ 三个用户确认关卡 | META/OUTLINE/style-spec/源材料索引 |
 | **Phase 4** | 金标准验证 | 选一章按设计的语法写 → 五层审计 + L5 教学测试 → 通过后回填 style-spec | 金标准章 md |
-| **Phase 5** | 全量写作+收网 | sub-agent 并行铺章 → 附录汇编 → 跨章审计 → 合并 BOOK.md | chapters/、appendix/、BOOK.md |
+| **Phase 5** | 全量写作+收网 | 5.1 sub-agent 并行铺章 → 5.2 附录汇编 → 5.3 跨章审计 → 5.4 合并 BOOK.md（human-readable 注入 loader 指令） | chapters/、appendix/、BOOK.md |
 | **Phase 6** | 终检与交付 | 终检 → 拆脚手架 → 质量门 → 交付 | 纯净 BOOK.md |
 
 Mode A（无源从零造）差异：Phase 2 跳过、幻觉 gate 更严，仅适合 AI 知识密度高领域。
@@ -103,7 +103,7 @@ Mode A（无源从零造）差异：Phase 2 跳过、幻觉 gate 更严，仅适
 
 | 场景 | 参考文件 |
 |---|---|
-| Phase 1 PDF 转换 | scripts/ 说明 |
+| Phase 1 PDF 转换 | 见下方"Phase 1 前置"段落 + `scripts/01_pdf_to_md.py` docstring |
 | Phase 2 源探查 | `references/source-material.md` |
 | Phase 3 四文件契约 | `references/file-contracts.md` |
 | Phase 3 模式选型 | `references/patterns/README.md` |

@@ -42,8 +42,14 @@ PMP 是认证类，选"认证应试蓝本"预装配包，拿到 14 张候选卡�
 
 ```markdown
 # Chapter 4 · 冲突、领导、团队与基本规则——副标题
-（YAML frontmatter: eco_tasks/chapter_type/pmbok7_anchor/...）
+---
+eco_tasks: [...]
+chapter_type: ...
+pmbok7_anchor: ...
+---
 > [锦程建工情境钩子]
+
+（注：PMP 虽为 human-readable 路线，但因认证类多源校验需要，META 显式声明了章级 frontmatter schema，是 human-readable 路线的例外，见 two-routes.md。）
 
 ## 4.1 [小节标题]
 [叙事 prose]

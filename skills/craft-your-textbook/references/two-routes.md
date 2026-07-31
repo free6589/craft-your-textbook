@@ -22,7 +22,8 @@
 | 维度 | pure-blueprint | human-readable |
 |---|---|---|
 | 第一读者 | AI 老师 | 人类读者（AI 第二读者） |
-| 不变量约束 | I1-I6 | I1-I4 + H1-H3 |
+| 路线专属内容不变量 | I1-I6 | I1-I4 + H1-H3 |
+| 过程不变量 | I7-I9（两条路线同等适用，见 invariants.md） | I7-I9 |
 | 正文形态 | 结构化、可含元指令块、技术回溯、yaml frontmatter、emoji 标题 | 流畅 prose，不内嵌元指令 |
 | 教学路线图位置 | 散布于各板块（💬引导方向/双脚本等） | 集中在章末教学区 |
 | 章级 frontmatter | 可选且常用（grep 校验用） | 默认无，META 显式声明 |

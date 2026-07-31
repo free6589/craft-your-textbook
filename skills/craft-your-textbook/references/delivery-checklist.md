@@ -84,7 +84,11 @@ grep -rn 'v[0-9]\|<!--\|教师用书\|新增\|增量\|人类教师\|可追溯\|�
 **3. 重跑合并**
 
 ```bash
+# pure-blueprint 路线（保留章级 frontmatter）：
 python scripts/merge_book.py
+
+# human-readable 路线（剥离章级 frontmatter）：
+python scripts/merge_book.py --strip-frontmatter
 ```
 
 ## Phase 6 质量门（6 项全绿才交付）
