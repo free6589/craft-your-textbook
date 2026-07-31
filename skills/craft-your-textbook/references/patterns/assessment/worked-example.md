@@ -37,7 +37,7 @@ def fib(n):
 
 数学/审计同理：完整展示一道题的解题过程，标注关键步骤和常见错在哪。
 
-> **暂无真实样本，留为插件点。** 以上编程示例为构造示例，非来自真实教材。CPA 审计教材的 worked-example 形态为审计程序设计题（见 CPA Ch1 Application Problems），其结构更接近 application-problem + worked-example 的混合体。欢迎贡献真实编程/数学/理科的 worked-example 样本。
+以上编程示例为构造示例。真实教材中，worked-example 的形态因学科而异：CPA 审计教材的 worked-example 形态为审计程序设计题（见 CPA Ch1），其结构更接近 application-problem + worked-example 的混合体。
 
 ## 已知陷阱
 - ❌ 跳过中间步骤直接给最终代码/答案 → 学生看不出"怎么想到的"
