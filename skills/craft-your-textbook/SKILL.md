@@ -50,8 +50,8 @@ description: 让你具备"亲手为自己造一本教材"的能力——把源�
 | **Phase 2** | 源探查 | 所有有源书必走：摸源结构、角色标签、简码表、权威层级 | `源材料索引.md` 第一层 |
 | **Phase 3** | 教学设计 | **核心阶段**：五步设计（见下）+ 三个用户确认关卡 | META/OUTLINE/style-spec/源材料索引 |
 | **Phase 4** | 金标准验证 | 选一章按设计的语法写 → 五层审计（含 L5 教学测试）→ 通过后回填 style-spec | 金标准章 md |
-| **Phase 5** | 全量写作+收网 | 5.1 sub-agent 并行铺章 → 5.2 附录汇编 → 5.3 跨章审计 → 5.4 合并 BOOK.md（human-readable 注入 loader 指令） | chapters/、appendix/、BOOK.md |
-| **Phase 6** | 终检与交付 | 终检 → 拆脚手架 → 质量门 → 交付 | 纯净 BOOK.md |
+| **Phase 5** | 全量写作+收网 | 5.1 sub-agent 并行铺章（分批写，写一批即跑章级独立审计）→ 5.2 附录汇编 → 5.3 跨章全书审计（查映射表/事实一致性/时间线/术语）→ 5.4 合并 BOOK.md（human-readable 注入 loader 指令） | chapters/、appendix/、BOOK.md |
+| **Phase 6** | 终检与交付 | **修订复审**（核实 5.3 的修复到位且没引入新问题）→ 终检 → 拆脚手架 → 质量门 → 交付 | 纯净 BOOK.md |
 
 Mode A（无源从零造）差异：Phase 2 跳过、幻觉 gate 更严，仅适合 AI 知识密度高领域（见 `references/source-material.md` 知识密度自评）。Mode B（有源造书）：Phase 2 必走，按源数量选择探查深度（轻量/中量/完整版）。
 
