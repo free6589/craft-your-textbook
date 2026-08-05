@@ -154,10 +154,10 @@ Mode A（无源从零造）差异：Phase 2 跳过、幻觉 gate 更严，仅适
 | Phase 1 PDF→MD | `python <项目>/scripts/01_pdf_to_md.py <PDF> sources-md/`（理科 `ENABLE_FORMULA=True`） |
 | 定路线 | 见上方流程；两路线差异见 `two-routes.md` |
 | 审计何时跑 | 章写完 L1/L2/L3；全书 L4；试教条件触发（见 `audit-and-testing.md`） |
-| Phase 6 禁用词终检 | `grep -rn "AI\|伴读\|指挥官\|prompt" chapters/ appendix/`（先 `export LC_ALL=C.UTF-8`） |
+| Phase 6 禁用词终检 | `grep -rn "AI\|伴读\|指挥官\|prompt\|批量指挥\|对话框\|Socratopia\|让学生" chapters/ appendix/ \| grep -v 'AI 老师'`（先 `export LC_ALL=C.UTF-8`） |
 | Phase 6 拆脚手架 | `python scripts/strip_meta_sections.py chapters/ appendix/` + 逐类 grep 清理 |
 | Phase 6 合并 | `python scripts/merge_book.py`（human-readable 加 `--strip-frontmatter`） |
-| 质量门判据⑥ baseline | `wc -c < BOOK.md > .book-baseline`；重跑时 ±10% 内 |
+| 质量门判据⑥ baseline | `wc -c < BOOK.md \| tr -d ' ' > .book-baseline`；重跑时 ±10% 内 |
 
 ## ⚠️ Phase 1 前置：MinerU API Token
 

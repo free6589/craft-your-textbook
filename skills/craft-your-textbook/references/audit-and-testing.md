@@ -20,18 +20,19 @@
 ```dot
 digraph audit_when {
     rankdir=TB;
-    "章写完" [shape=box];
-    "L1 事前规则 / L2 敏感对齐 / L3 引文抽检（章级）" [shape=box];
-    "全书写完" [shape=box];
-    "L4 结构审计（全书级，并入 Phase 5.3）" [shape=box];
+    "金标准章写完（Phase 4）" [shape=box];
+    "L1/L2/L3 章级审计" [shape=box];
+    "全书写完（Phase 5 末）" [shape=box];
+    "L4 全书结构审计（Phase 5.3）" [shape=box];
     "用户本地用了 socratic-lens?" [shape=diamond];
-    "试教：Phase 4 金标准 + Phase 6 交付前" [shape=box];
+    "试教（金标准 Phase 4 + 交付前 Phase 6）" [shape=box];
     "不跑试教" [shape=box];
 
-    "章写完" -> "L1 事前规则 / L2 敏感对齐 / L3 引文抽检（章级）";
-    "全书写完" -> "L4 结构审计（全书级，并入 Phase 5.3）";
-    "L4 结构审计（全书级，并入 Phase 5.3）" -> "用户本地用了 socratic-lens?";
-    "用户本地用了 socratic-lens?" -> "试教：Phase 4 金标准 + Phase 6 交付前" [label="是"];
+    "金标准章写完（Phase 4）" -> "L1/L2/L3 章级审计";
+    "L1/L2/L3 章级审计" -> "用户本地用了 socratic-lens?";
+    "全书写完（Phase 5 末）" -> "L4 全书结构审计（Phase 5.3）";
+    "L4 全书结构审计（Phase 5.3）" -> "用户本地用了 socratic-lens?";
+    "用户本地用了 socratic-lens?" -> "试教（金标准 Phase 4 + 交付前 Phase 6）" [label="是"];
     "用户本地用了 socratic-lens?" -> "不跑试教" [label="否"];
 }
 ```
@@ -159,7 +160,7 @@ Mode A（无源）替代机制：每个断言必须通过试教（socratic-lens�
 
 **红旗自检**（正在想这些 → STOP）："修章就够了，回填太慢" / "后面并行章我注意着点就行" / "加一句注释就算回填了"。借口真相见 `anti-patterns.md` ⑥。
 
-### 9.1 回填判断：问题是"章没写对"还是"文件没写清楚"？
+### 8.1 回填判断：问题是"章没写对"还是"文件没写清楚"？
 
 审计发现一个 gap 时，先问：
 
@@ -178,7 +179,7 @@ Mode A（无源）替代机制：每个断言必须通过试教（socratic-lens�
 
 > 上表的本质模式：**审计发现某条规则被违反 → 追问"这条规则写在哪？agent 开工前能看到吗？"→ 如果规则不存在或不够硬 → 把规则补进约束文件。** 学科专属术语（PMBOK7/ECO/Ch3 回扣）替换为你的学科对应物即可。
 
-### 9.2 回填时机和流程
+### 8.2 回填时机和流程
 
 ```
 金标准章写完 → 独立 subagent 审计（§7.0）
@@ -191,7 +192,7 @@ Mode A（无源）替代机制：每个断言必须通过试教（socratic-lens�
   → 金标准章 + 约束文件双双定稿 → 进入 Phase 5 并行铺章
 ```
 
-### 9.3 一句话
+### 8.3 一句话
 
 > **审计不只要修章，还要修"章为什么写错了"。否则每个并行 agent 都会用同样的方式写错。**
 
