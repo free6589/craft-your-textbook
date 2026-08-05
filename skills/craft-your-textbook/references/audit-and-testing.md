@@ -193,16 +193,14 @@ Mode A（无源）替代机制：每个断言必须通过试教（socratic-lens�
 
 ---
 
-## 九、sub-agent prompt 必带要素
+## 九、sub-agent prompt 模板（单一事实源）
 
-Phase 5 并行铺章时，每个 writing sub-agent 的 prompt 必带：
+Phase 5 并行铺章与审计的 prompt，用模板文件，不在此重复：
 
-1. 金标准章全文（作为范例）
-2. META.md + OUTLINE.md + style-spec.md + 源材料索引.md（四个文件全文）
-3. 本章的具体源材料映射（源材料索引里本章的那一节，精确到行号）
-4. 防幻觉铁律完整 4 条（上面 §6.4）
-5. 不变量底线（从 invariants.md 读适用路线的 I/H 编号）
-6. 本章在知识链中的位置和跨章引用指向
+- **REQUIRED** 写作 subagent：用 `references/subagent-prompts/writing-agent-prompt.md` 作 dispatch 模板——金标准章全文、四文件全文、本章源映射、防幻觉铁律 4 条、不变量底线、知识链位置 6 项契约都收在模板里。
+- **REQUIRED** 审计 subagent：用 `references/subagent-prompts/audit-agent-prompt.md`——干净上下文、只报告不改文件、严重度分级、完整报告。
+
+主 agent 的 dispatch = 模板 + 本书实际值填入 `{{占位符}}`。模板缺项 = 该 agent 开工前看不到关键约束。
 
 ---
 
