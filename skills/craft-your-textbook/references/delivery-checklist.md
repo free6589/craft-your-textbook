@@ -41,6 +41,8 @@ Phase 6 终检与交付包含三步，别混淆：
 
 终检通过 → 进入拆脚手架。
 
+> **路线专属终检项**：pure-blueprint 查章级 yaml frontmatter 合法；human-readable 查 loader 指令注入 + 正文无内嵌元指令残留——完整差异见 `two-routes.md` §四。
+
 ## 为什么必须拆脚手架
 
 **造书过程产生的所有元数据，对 AI 老师零价值。**
@@ -126,7 +128,7 @@ python scripts/merge_book.py --strip-frontmatter
 - 必含板块清单：读 style-spec §章内板块语法
 - 禁用词表：读 style-spec §正文语言风格
 - 脚手架标题：读 META #10 脚手架标题列表
-- 章标题格式：读 style-spec §章标题格式
+- 章标题格式：读 style-spec §章内板块语法（标题格式在板块语法中约定）
 - 预期章数：读 OUTLINE §逐章骨架
 
 **任何一项不过，修完重跑。**

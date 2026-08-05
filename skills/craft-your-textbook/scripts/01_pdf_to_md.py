@@ -42,6 +42,12 @@ except ImportError:
         "  （或 pip install -r scripts/requirements.txt）"
     )
 
+# Windows 控制台默认 GBK，强制 UTF-8 输出，避免 emoji/中文 print 崩溃
+if sys.stdout and hasattr(sys.stdout, "reconfigure"):
+    sys.stdout.reconfigure(encoding="utf-8")
+if sys.stderr and hasattr(sys.stderr, "reconfigure"):
+    sys.stderr.reconfigure(encoding="utf-8")
+
 API_BASE = "https://mineru.net"
 
 # ── 转换参数（按教材类型调整）──────────────────────────────────

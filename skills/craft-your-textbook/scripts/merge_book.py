@@ -2,7 +2,7 @@
 """
 合并脚本【示例模板】：将 chapters/ 下所有章 + appendix/ 下所有附录合并为 BOOK.md。
 
-★★ 本文件是示例模板。造书时复制进项目（<项目根>/scripts/）→ 按需改顶部 HEADER 再跑。
+★★ 本文件是示例模板。造书时复制进项目（<项目根>/scripts/）→ 按需改顶部 LOADER_TEMPLATE 再跑。
     脚本自动扫描 chapters/ 和 appendix/ 目录，按文件名字典序合并。
 
 用法：
@@ -17,6 +17,12 @@ import os
 import re
 import sys
 from pathlib import Path
+
+# Windows 控制台默认 GBK，强制 UTF-8 输出，避免 emoji/中文 print 崩溃
+if sys.stdout and hasattr(sys.stdout, "reconfigure"):
+    sys.stdout.reconfigure(encoding="utf-8")
+if sys.stderr and hasattr(sys.stderr, "reconfigure"):
+    sys.stderr.reconfigure(encoding="utf-8")
 
 DEFAULT_BASE_DIR = "."
 
@@ -37,11 +43,13 @@ def read_meta_format(base_dir):
 
 
 def load_chapters(base_dir):
-    """递归扫描 chapters/ 下所有 *.md，按文件名字典序排序。"""
+    """递归扫描 chapters/ 下所有 *.md（排除进度 ledger progress.md），按文件名字典序排序。"""
     chapters_dir = Path(base_dir) / "chapters"
     if not chapters_dir.exists():
         return []
-    files = sorted(chapters_dir.rglob("*.md"))
+    files = sorted(
+        f for f in chapters_dir.rglob("*.md") if f.name != "progress.md"
+    )
     return files
 
 
