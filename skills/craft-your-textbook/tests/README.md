@@ -35,9 +35,11 @@
 
 | 场景 | 场景 hash（sha256 前 8） | 模型 | 日期 | RED 结论 | GREEN/REFACTOR 结论 |
 |---|---|---|---|---|---|
-| ① route | c6f88f6d | | | | |
-| ② golden | 46bfe6f4 | | | | |
-| ③ audit | fd6911e9 | | | | |
-| ④ spiral | 931231a4 | | | | |
-| ⑤ scaffold | 657ceb28 | | | | |
-| ⑥ backfill | 94089508 | | | | |
+| ① route | c6f88f6d | opus | 2026-08-05 | 已守（A） | |
+| ② golden | 46bfe6f4 | opus | 2026-08-05 | 已守（A） | |
+| ③ audit | fd6911e9 | opus | 2026-08-05 | 已守（A） | |
+| ④ spiral | 931231a4 | opus | 2026-08-05 | 已守（A） | |
+| ⑤ scaffold | 657ceb28 | opus | 2026-08-05 | 已守（A） | |
+| ⑥ backfill | 94089508 | opus | 2026-08-05 | 已守（A） | |
+
+> RED 基线 6/6 已守：当前 skill 已成功守住全部纪律。供述诱惑逐字记于 `docs/superpowers/reform-trace.md`（借口表原料）。改造定位 = 形式强化 + 防回退。
