@@ -4,6 +4,32 @@
 
 ---
 
+## 〇、Mode A/B 决策流程图
+
+```dot
+digraph mode {
+    rankdir=TB;
+    "用户要造书" [shape=box];
+    "有源材料?" [shape=diamond];
+    "Mode B：Phase 2 必走" [shape=box];
+    "按源数量选探查深度（轻量/中量/完整版）" [shape=box];
+    "Mode A：从零造（兜底）" [shape=box];
+    "知识密度自评：blueprint ≥15/20，human ≥18/20" [shape=box];
+    "幻觉 gate 更严" [shape=box];
+
+    "用户要造书" -> "有源材料?";
+    "有源材料?" -> "Mode B：Phase 2 必走" [label="有"];
+    "Mode B：Phase 2 必走" -> "按源数量选探查深度（轻量/中量/完整版）";
+    "有源材料?" -> "Mode A：从零造（兜底）" [label="无（用户明确）"];
+    "Mode A：从零造（兜底）" -> "知识密度自评：blueprint ≥15/20，human ≥18/20";
+    "知识密度自评：blueprint ≥15/20，human ≥18/20" -> "幻觉 gate 更严";
+}
+```
+
+> 不要因为"手头暂时没找到源"就跳去 Mode A——先穷尽找源（学生用书 + 教师用书优先）。
+
+---
+
 ## 一、源角色标签（7 类）
 
 用户给的所有素材文件都在 META.md 正文的"源材料"小节里登记（自然语言描述即可，不需要 yaml），每个文件打一个角色标签。角色标签决定该文件在写作中的地位。
