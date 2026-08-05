@@ -1,9 +1,16 @@
 ---
 name: craft-your-textbook
-description: 让你具备"亲手为自己造一本教材"的能力——把源材料（教材/考纲/讲义等）加工成 AI 苏格拉底老师能拿去上课的教学蓝本（pure-blueprint），或一本给人读的流畅教材（human-readable，AI 也能直接教）。适用任何学科。两条路线互斥选择，默认推荐给 AI 老师的版本。覆盖 PDF→MD、源探查、教学设计五步、金标准先行、模式选型、并行铺章、审计合并拆脚手架全流程。当用户说"造一本教学蓝本/做一本 XX 教材/按这套方法写一本书"时使用。
+description: 当用户要把教材/考纲/讲义/某领域知识加工成 AI 苏格拉底老师能拿去上课的教学蓝本（pure-blueprint）或一本给人读的流畅教材（human-readable，AI 也能直接教）时使用。适用任何学科，有教师用书可针对应试。触发词："造一本教学蓝本/做一本 XX 教材/按这套方法写一本书/复刻这个 skill 的写法"。
 ---
 
 # 亲手造属于你自己的教材（Craft Your Textbook）
+
+## 铁律（不可违反）
+
+**先出设计再写正文；先写金标准再并行；交付前必拆脚手架；触发后必问路线，不替用户默认。**
+**违反本条的字面 = 违反本条的精神。**
+
+---
 
 ## 这是什么
 
@@ -38,6 +45,24 @@ description: 让你具备"亲手为自己造一本教材"的能力——把源�
 2. 书要喂给已成型的苏格拉底 AI 软件（Socratopia 等） → pure-blueprint
 3. 用户不确定 → 推荐 pure-blueprint 并等拍板
 
+```dot
+digraph route {
+    rankdir=TB;
+    "用户要造书" [shape=box];
+    "原话含'我自己读/出版/当书出/给真人教师/通读'?" [shape=diamond];
+    "喂给已成型的苏格拉底 AI 软件?" [shape=diamond];
+    "human-readable" [shape=box];
+    "pure-blueprint" [shape=box];
+    "呈现两路线 + 推荐 pure-blueprint，等用户拍板" [shape=box];
+
+    "用户要造书" -> "原话含'我自己读/出版/当书出/给真人教师/通读'?";
+    "原话含'我自己读/出版/当书出/给真人教师/通读'?" -> "human-readable" [label="是"];
+    "原话含'我自己读/出版/当书出/给真人教师/通读'?" -> "喂给已成型的苏格拉底 AI 软件?" [label="否"];
+    "喂给已成型的苏格拉底 AI 软件?" -> "pure-blueprint" [label="是"];
+    "喂给已成型的苏格拉底 AI 软件?" -> "呈现两路线 + 推荐 pure-blueprint，等用户拍板" [label="否/不确定"];
+}
+```
+
 路线差异和细节见 `references/two-routes.md`。
 
 ## 全流程导航（6 阶段）
@@ -49,11 +74,15 @@ description: 让你具备"亲手为自己造一本教材"的能力——把源�
 | **Phase 1** | 源材料准备 | PDF→MD（MinerU API）+ 复制脚本进项目 + 装依赖 | `sources-md/`、`scripts/` |
 | **Phase 2** | 源探查 | 所有有源书必走：摸源结构、角色标签、简码表、权威层级 | `源材料索引.md` 第一层 |
 | **Phase 3** | 教学设计 | **核心阶段**：五步设计（见下）+ 三个用户确认关卡 | META/OUTLINE/style-spec/源材料索引 |
-| **Phase 4** | 金标准验证 | 选一章按设计的语法写 → 五层审计（含 L5 教学测试）→ 通过后回填 style-spec | 金标准章 md |
+| **Phase 4** | 金标准验证 | 选一章按设计的语法写 → 四层审计 + 试教（条件触发）→ 通过后回填 style-spec | 金标准章 md |
 | **Phase 5** | 全量写作+收网 | 5.1 sub-agent 并行铺章（分批写，写一批即跑章级独立审计）→ 5.2 附录汇编 → 5.3 跨章全书审计（查映射表/事实一致性/时间线/术语）→ 5.4 合并 BOOK.md（human-readable 注入 loader 指令） | chapters/、appendix/、BOOK.md |
 | **Phase 6** | 终检与交付 | **修订复审**（核实 5.3 的修复到位且没引入新问题）→ 终检 → 拆脚手架 → 质量门 → 交付 | 纯净 BOOK.md |
 
 Mode A（无源从零造）差异：Phase 2 跳过、幻觉 gate 更严，仅适合 AI 知识密度高领域（见 `references/source-material.md` 知识密度自评）。Mode B（有源造书）：Phase 2 必走，按源数量选择探查深度（轻量/中量/完整版）。
+
+**Phase 5.1 并行铺章的落盘纪律**：
+- **进度 ledger**：每批/每章写完，在 `<项目根>/chapters/progress.md` 记一行状态（章号 → 完成 → 审计结论）。上下文压缩后靠它恢复进度，别靠记忆。
+- **模型分级**：章节写作 = 标准档模型（prose 生成非机械任务）；机械任务（合并/批量替换/脚本）= 廉价档；全书审计/收尾终审 = 最强档。审计顽固问题升一档重试。
 
 ## 核心：Phase 3 教学设计五步
 
@@ -101,18 +130,34 @@ Mode A（无源从零造）差异：Phase 2 跳过、幻觉 gate 更严，仅适
 
 ## 参考文件按需加载
 
+> `**REQUIRED:**` = Phase 3 开跑前必须读（不变量是底线、模式库是菜单、契约强制回答设计问题）。其余按需。
+
 | 场景 | 参考文件 |
 |---|---|
+| **REQUIRED** Phase 3 不变量底线 | `references/invariants.md` |
+| **REQUIRED** Phase 3 模式选型 | `references/patterns/README.md` |
+| **REQUIRED** Phase 3 四文件契约 | `references/file-contracts.md` |
 | Phase 1 PDF 转换 | 见下方"Phase 1 前置"段落 + `scripts/01_pdf_to_md.py` docstring |
 | Phase 2 源探查 | `references/source-material.md` |
-| Phase 3 四文件契约 | `references/file-contracts.md` |
-| Phase 3 模式选型 | `references/patterns/README.md` |
-| Phase 3 不变量底线 | `references/invariants.md` |
 | Phase 3 板块语法起点 | `references/chapter-grammar-starter.md` |
 | Phase 3 路线差异 | `references/two-routes.md` |
 | Phase 4-5 审计 | `references/audit-and-testing.md` |
+| Phase 5 写作 subagent prompt | `references/subagent-prompts/writing-agent-prompt.md` |
+| Phase 5 审计 subagent prompt | `references/subagent-prompts/audit-agent-prompt.md` |
 | Phase 6 交付 | `references/delivery-checklist.md` |
 | 避坑 | `references/anti-patterns.md` |
+
+## Quick Reference 速查表
+
+| 常见操作 | 命令 / 判据 |
+|---|---|
+| Phase 1 PDF→MD | `python <项目>/scripts/01_pdf_to_md.py <PDF> sources-md/`（理科 `ENABLE_FORMULA=True`） |
+| 定路线 | 见上方流程；两路线差异见 `two-routes.md` |
+| 审计何时跑 | 章写完 L1/L2/L3；全书 L4；试教条件触发（见 `audit-and-testing.md`） |
+| Phase 6 禁用词终检 | `grep -rn "AI\|伴读\|指挥官\|prompt" chapters/ appendix/`（先 `export LC_ALL=C.UTF-8`） |
+| Phase 6 拆脚手架 | `python scripts/strip_meta_sections.py chapters/ appendix/` + 逐类 grep 清理 |
+| Phase 6 合并 | `python scripts/merge_book.py`（human-readable 加 `--strip-frontmatter`） |
+| 质量门判据⑥ baseline | `wc -c < BOOK.md > .book-baseline`；重跑时 ±10% 内 |
 
 ## ⚠️ Phase 1 前置：MinerU API Token
 
