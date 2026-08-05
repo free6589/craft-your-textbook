@@ -167,7 +167,7 @@ AI 会带你从一份 PDF 一路走到成书：
   - 3.3 模式选型+板块语法设计：从 20 张模式卡选/混搭/新造，回答两个强制问题（拒绝了哪些+为什么/所选模式对应什么教学问题）→ **用户确认关卡②**
   - 3.4 整书教学架构设计：知识链主线、逐章骨架、跨章引用、附录策略 → **用户确认关卡③**
   - 3.5 META+源索引完稿，回填源材料索引第二层（章级映射）
-- **Phase 4 金标准**：选一章按设计写、五层审计（含 L5 教学测试）通过后回填 style-spec 写作惯例
+- **Phase 4 金标准**：选一章按设计写、四层审计 + 试教（条件触发）通过后回填 style-spec 写作惯例
 - **Phase 5 全量写作+收网**：sub-agent 并行铺章（prompt 必带金标准+四文件+源映射+幻觉 gate）→ 附录汇编 → 跨章审计 → 合并 BOOK.md（human-readable 注入 loader 指令）
 - **Phase 6 交付**：终检→拆脚手架（脚手架标题从 META 读）→ 质量门（6 项全绿）→ 交付
 
@@ -201,9 +201,14 @@ craft-your-textbook/
 │   │   ├── narrative/              # 叙事结构（情境钩子/贯穿案例/主角）
 │   │   ├── structure/              # 整书架构（地基章/收网章/跨章引用/附录汇编/多源裁决/主题低音）
 │   │   └── language-learning/      # 语言特化（词汇分层）
-│   ├── audit-and-testing.md        # 五层审计 + L5 教学测试 + 金标准门槛 + 幻觉 gate
+│   ├── audit-and-testing.md        # 四层审计 + 试教（条件触发）+ 金标准门槛 + 幻觉 gate
 │   ├── delivery-checklist.md       # Phase 6 终检 + 拆脚手架 + 质量门（通用化）
+│   ├── skill-maintenance.md        # 改本 skill 的 RED-GREEN-REFACTOR 编辑规矩
+│   ├── subagent-prompts/           # 写作/审计 subagent 的 prompt 模板
+│   │   ├── writing-agent-prompt.md # Phase 5 写作 subagent 的 prompt 模板
+│   │   └── audit-agent-prompt.md   # 独立审计 subagent 的 prompt 模板
 │   └── anti-patterns.md            # 反模式速查（含诚实边界声明）
+├── tests/                          # 压力场景测试台（改 skill 前先跑，见 skill-maintenance.md）
 └── scripts/                        # 示例脚本模板——造书时复制进项目再按本书改
     ├── 01_pdf_to_md.py             # Phase 1：MinerU API 转 Markdown（token 走环境变量，理科开 ENABLE_FORMULA）
     ├── merge_book.py               # Phase 5.4：合并章+附录为 BOOK.md；读 META format 字段；human-readable 注入 loader 指令；--strip-frontmatter 剥离章级 yaml
