@@ -14,7 +14,7 @@
 
 - **整书架构层**（`structure/`）：设计 OUTLINE 时先翻这组——地基章、收网章、跨章引用、附录汇编、多源裁决、主题低音线
 - **章内板块层**（其他目录）：设计章内板块语法时翻
-  - `concept-anchoring/`：概念锚定类（精确呈现、误区桩、苏格拉底提问、事实vs判断分离）
+  - `concept-anchoring/`：概念锚定类（精确呈现、误区桩、苏格拉底提问、事实vs判断分离、**深度铺陈（depth-elaboration）**）
   - `assessment/`：评估/练习类（判断题、速判题、推理题、例题、练习梯度、必背锚）
   - `narrative/`：叙事结构类（情境钩子、贯穿案例、主角）
   - `language-learning/`：语言学习特化（词汇分层）
@@ -89,6 +89,7 @@
 | misconception | 学习者的常见误区怎么提前暴露和拆解 |
 | socratic-questioning | 怎么设计提问路线图引导学生自己推导 |
 | fact-vs-judgment | 确定性知识（要背）和判断（要推理）怎么分离才不混淆 |
+| depth-elaboration | 核心概念怎么写才有深度（机理/脉络/边界/专家视角） |
 
 ### 评估/练习类（assessment/）
 | 卡 | 解决什么问题 |
