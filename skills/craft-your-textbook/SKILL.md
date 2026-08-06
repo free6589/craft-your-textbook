@@ -125,6 +125,7 @@ Mode A（无源从零造）差异：Phase 2 跳过、幻觉 gate 更严，仅适
 - **金标准先行**：没有金标准就并行 = agent 必然漂移
 - **一个 agent 只写一章**，避免长上下文漂移
 - **断言可追溯**：每写一条定义/公式/偏好判断，都能回源或回判断根
+- **深度承诺**：Phase 3 在 style-spec 声明四维深度目标（默认"中"底线），金标准兑现，未兑现回炉
 - **防螺旋**：Phase 3 定稿后不允许加章/附录/机制板块，新需求先问"能不能塞进现有结构"
 - **交付前必拆脚手架**
 
@@ -140,6 +141,7 @@ Mode A（无源从零造）差异：Phase 2 跳过、幻觉 gate 更严，仅适
 | Phase 1 PDF 转换 | 见下方"Phase 1 前置"段落 + `scripts/01_pdf_to_md.py` docstring |
 | Phase 2 源探查 | `references/source-material.md` |
 | Phase 3 板块语法起点 | `references/chapter-grammar-starter.md` |
+| Phase 3.3 深度设计 / Phase 4 深度审计 | `references/depth.md` |
 | Phase 3 路线差异 | `references/two-routes.md` |
 | Phase 4-5 审计 | `references/audit-and-testing.md` |
 | Phase 5 写作 subagent prompt | `references/subagent-prompts/writing-agent-prompt.md` |
