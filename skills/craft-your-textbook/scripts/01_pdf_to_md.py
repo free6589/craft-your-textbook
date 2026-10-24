@@ -26,6 +26,7 @@
     4. 下载 zip 结果并解压到输出目录（内含 full.md + 图片）
 """
 
+import argparse
 import io
 import os
 import sys
@@ -68,6 +69,20 @@ def get_headers():
     return {"Content-Type": "application/json", "Authorization": f"Bearer {token}"}
 
 
+def _json_or_raise(res, what):
+    """修 M-04：统一校验 HTTP 状态码与 JSON 可解析性，避免 res.json() 裸抛
+    JSONDecodeError、也避免把 HTML 错误页当成功响应继续往下走。
+    """
+    if res.status_code in (401, 403):
+        raise RuntimeError(f"{what}失败（HTTP {res.status_code}）：MINERU_TOKEN 无效或过期")
+    if res.status_code >= 400:
+        raise RuntimeError(f"{what}失败（HTTP {res.status_code}）：{res.text[:300]}")
+    try:
+        return res.json()
+    except ValueError as exc:
+        raise RuntimeError(f"{what}返回的不是 JSON（HTTP {res.status_code}）：{res.text[:300]}") from exc
+
+
 def step1_apply_upload_url(pdf_path, headers):
     print("\n[Step 1] 申请上传链接 ...")
     url = f"{API_BASE}/api/v4/file-urls/batch"
@@ -79,18 +94,25 @@ def step1_apply_upload_url(pdf_path, headers):
         "language": LANGUAGE,
     }
     res = requests.post(url, headers=headers, json=data, timeout=60)
-    result = res.json()
+    result = _json_or_raise(res, "申请上传链接")
     print(f"  HTTP {res.status_code} | code={result.get('code')} msg={result.get('msg')}")
     if result.get("code") != 0:
         raise RuntimeError(f"申请上传链接失败: {result}")
-    batch_id = result["data"]["batch_id"]
-    file_urls = result["data"]["file_urls"]
+    batch_id = result.get("data", {}).get("batch_id")
+    file_urls = result.get("data", {}).get("file_urls") or []
+    # 修 M-04：原实现直接 file_urls[0]，空列表会抛 IndexError
+    if not batch_id:
+        raise RuntimeError(f"申请上传链接返回缺 batch_id：{result}")
+    if not file_urls:
+        raise RuntimeError(f"申请上传链接返回缺 file_urls（空列表）：{result}")
     print(f"  batch_id = {batch_id}")
     return batch_id, file_urls
 
 
 def step2_upload_file(pdf_path, file_urls):
     print("\n[Step 2] 上传 PDF ...")
+    if not file_urls:
+        raise RuntimeError("上传失败：file_urls 为空（Step 1 未返回上传链接）")
     size_mb = os.path.getsize(pdf_path) / 1024 / 1024
     print(f"  文件: {pdf_path} ({size_mb:.2f} MB)")
     with open(pdf_path, "rb") as f:
@@ -105,12 +127,37 @@ def step3_poll_batch_result(batch_id, headers, max_wait_seconds=3600):
     url = f"{API_BASE}/api/v4/extract-results/batch/{batch_id}"
     start = time.time()
     last = None
+    consecutive_errors = 0
     while time.time() - start < max_wait_seconds:
         res = requests.get(url, headers=headers, timeout=60)
-        result = res.json()
-        if result.get("code") != 0:
+        # 修 M-03：原实现把 code != 0（含 token 失效/参数错）一律当成"再等等"，
+        # 会拿着失效凭据空转到 3600s 超时。这里区分：认证/参数类立即失败，
+        # 限流/5xx 退避重试，未知错误累计 5 次后失败。
+        if res.status_code in (401, 403):
+            raise RuntimeError(
+                f"轮询被拒绝（HTTP {res.status_code}）：MINERU_TOKEN 无效或过期，请重新申请并 export"
+            )
+        if res.status_code == 404:
+            raise RuntimeError(f"轮询失败（HTTP 404）：batch_id 不存在或已过期（{batch_id}）")
+        if res.status_code == 429 or res.status_code >= 500:
+            print(f"  [retry] 服务端临时错误 HTTP {res.status_code}，15s 后重试")
             time.sleep(15)
             continue
+        result = _json_or_raise(res, "轮询任务状态")
+        if result.get("code") != 0:
+            consecutive_errors += 1
+            print(
+                f"  [retry] 轮询返回 code={result.get('code')} msg={result.get('msg')}"
+                f"（连续第 {consecutive_errors} 次）"
+            )
+            if consecutive_errors >= 5:
+                raise RuntimeError(
+                    f"轮询连续 {consecutive_errors} 次返回错误 code={result.get('code')} "
+                    f"msg={result.get('msg')}；重试不会自愈，请检查 token/参数"
+                )
+            time.sleep(15)
+            continue
+        consecutive_errors = 0
         data_list = result.get("data", {}).get("extract_result", [])
         if not data_list:
             time.sleep(15)
@@ -143,11 +190,21 @@ def step4_download_and_unzip(zip_url, output_dir):
         print(f"  已解压 {len(names)} 个文件到: {output_dir}")
 
 
-def main():
-    if len(sys.argv) < 3:
-        sys.exit("用法: python 01_pdf_to_md.py <输入PDF路径> <输出目录>")
-    pdf_path = sys.argv[1]
-    output_dir = Path(sys.argv[2])
+def main(argv=None):
+    parser = argparse.ArgumentParser(
+        description="PDF → Markdown（MinerU v4 在线 API）"
+    )
+    parser.add_argument("pdf_path", help="输入 PDF 路径")
+    parser.add_argument("output_dir", help="输出目录（如 sources-md/）")
+    parser.add_argument(
+        "--max-wait-seconds",
+        type=int,
+        default=3600,
+        help="轮询最长等待秒数，默认 3600（原来只能改源码）",
+    )
+    args = parser.parse_args(argv)
+    pdf_path = args.pdf_path
+    output_dir = Path(args.output_dir)
     if not os.path.isfile(pdf_path):
         sys.exit(f"✗ PDF 不存在: {pdf_path}")
 
@@ -158,7 +215,7 @@ def main():
 
     batch_id, file_urls = step1_apply_upload_url(pdf_path, headers)
     step2_upload_file(pdf_path, file_urls)
-    result = step3_poll_batch_result(batch_id, headers)
+    result = step3_poll_batch_result(batch_id, headers, max_wait_seconds=args.max_wait_seconds)
     zip_url = result.get("full_zip_url")
     if not zip_url:
         raise RuntimeError(f"未找到 full_zip_url，返回: {result}")

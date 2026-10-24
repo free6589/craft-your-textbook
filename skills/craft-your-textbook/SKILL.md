@@ -156,7 +156,7 @@ Mode A（无源从零造）差异：Phase 2 跳过、幻觉 gate 更严，仅适
 | Phase 1 PDF→MD | `python <项目>/scripts/01_pdf_to_md.py <PDF> sources-md/`（理科 `ENABLE_FORMULA=True`） |
 | 定路线 | 见上方流程；两路线差异见 `two-routes.md` |
 | 审计何时跑 | 章写完 L1/L2/L3；全书 L4；试教条件触发（见 `audit-and-testing.md`） |
-| Phase 6 禁用词终检 | `grep -rn "AI\|伴读\|指挥官\|prompt\|批量指挥\|对话框\|Socratopia\|让学生" chapters/ appendix/ \| grep -v 'AI 老师'`（先 `export LC_ALL=C.UTF-8`） |
+| Phase 6 禁用词终检 | `grep -rPno "AI(?! 老师)\||伴读\|指挥官\|prompt\|批量指挥\|对话框\|Socratopia\|让学生" chapters/ appendix/`（`-o` 逐命中输出、`(?! 老师)` 只排除合法词「AI 老师」本身；macOS 自带 grep 无 `-P` → `brew install grep` 后用 `ggrep -rPno`。**不要**用 `grep -v 'AI 老师'` 收尾：它按整行丢弃，会连带放过同一行里的其他命中） |
 | Phase 6 拆脚手架 | `python scripts/strip_meta_sections.py chapters/ appendix/` + 逐类 grep 清理 |
 | Phase 6 合并 | `python scripts/merge_book.py`（human-readable 加 `--strip-frontmatter`） |
 | 质量门判据⑥ baseline | `wc -c < BOOK.md \| tr -d ' ' > .book-baseline`；重跑时 ±10% 内 |
@@ -167,10 +167,20 @@ PDF→Markdown 默认走 MinerU 在线 API（`mineru.net`）。开跑前让用�
 
 0. 定位 skill 脚本目录 + 装依赖：
    ```bash
-   # 依次在用户级、项目级目录查找 skill 位置，取第一个命中
-   SKILL_DIR=$(dirname "$({ find ~/.claude -name SKILL.md -path '*craft-your-textbook*' 2>/dev/null; find . -name SKILL.md -path '*craft-your-textbook*' 2>/dev/null; } | head -1)")
+   # 依次在各级 skill 根查找，取第一个命中
+   # ~/.claude/skills = Claude Code；~/.agents/skills = DSH / 通用 Agent Skills 规范
+   # $CLAUDE_SKILLS_ROOT / $DSH_SKILLS_ROOT 可显式覆盖
+   SKILL_DIR=$(dirname "$({ \
+     find "${CLAUDE_SKILLS_ROOT:-$HOME/.claude}" "${DSH_SKILLS_ROOT:-$HOME/.agents/skills}" \
+       -maxdepth 6 -name SKILL.md -path '*craft-your-textbook*' 2>/dev/null; \
+     find . -maxdepth 6 -name SKILL.md -path '*craft-your-textbook*' 2>/dev/null; \
+   } | head -1)")
    if [ -z "$SKILL_DIR" ]; then
-     echo "错误：找不到 craft-your-textbook skill 目录。请确认已正确安装（见 README 安装节）。"
+     echo "错误：找不到 craft-your-textbook skill 目录。已查找："
+     echo "  ${CLAUDE_SKILLS_ROOT:-$HOME/.claude}/**/craft-your-textbook/SKILL.md"
+     echo "  ${DSH_SKILLS_ROOT:-$HOME/.agents/skills}/**/craft-your-textbook/SKILL.md"
+     echo "  ./**/craft-your-textbook/SKILL.md"
+     echo "若装在别处，直接手动指定：export SKILL_DIR=/path/to/craft-your-textbook"
      return 1 2>/dev/null || exit 1
    fi
    pip install -r "$SKILL_DIR/scripts/requirements.txt"

@@ -22,3 +22,7 @@ Thumbs.db
 # 密钥（务必不要提交）
 .env
 .claude/
+
+# 质量门 baseline 与拆脚手架备份（生成物，不入库）
+.book-baseline
+*.bak

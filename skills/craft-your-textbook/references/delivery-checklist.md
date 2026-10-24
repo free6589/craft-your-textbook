@@ -34,7 +34,7 @@ Phase 6 终检与交付包含三步，别混淆：
 
 | 检查项 | 命令（在项目根跑） | 判据 |
 |---|---|---|
-| 禁用词 | `grep -rn "AI\|伴读\|指挥官\|prompt\|批量指挥\|对话框\|Socratopia\|让学生" chapters/ appendix/ | grep -v 'AI 老师'` | 0（剩余裸 "AI" 命中人工确认是否合法） |
+| 禁用词 | `grep -rPno "AI(?! 老师)\||伴读\|指挥官\|prompt\|批量指挥\|对话框\|Socratopia\|让学生" chapters/ appendix/`（`-o` 逐命中；无 PCRE 时见下方注） | 0（剩余裸「AI」命中人工确认是否合法） |
 | 乱码 U+FFFD | `grep -rn $'�' chapters/ appendix/`（UTF-8 locale 下；或 `rg "\x{FFFD}"`） | 0（MinerU OCR 残留的替换字符全部改掉） |
 | 板块齐全 | 每个章都包含 style-spec §章内板块语法定义的必含板块（不是硬编码 7 板块，按本书设计核对） | 齐全 |
 | 跨章引用 | 每处跨章引用指向真实存在的章/概念 | 无空指 |
@@ -113,15 +113,18 @@ python scripts/merge_book.py --strip-frontmatter
 
 | 检查项 | 方法 | 判据 |
 |---|---|---|
-| ① 必含板块完整 | 按 style-spec §章内板块语法定义的必含板块 grep 计数 | = 章数 × 每章必含板块数（从 style-spec 读，不是硬编码 7 板块） |
+| ① 必含板块完整 | **逐章**对照 style-spec §章内板块语法声明的必含清单 grep 计数 | 每章各自齐全：常规章按 style-spec 清单；OUTLINE §逐章骨架 为特殊章（地基章/收网章/附录章）单独声明的清单优先，允许与常规章不同构。**不要**用「章数 × 每章板块数」的一刀切算式 |
 | ② 禁用词 | 从 style-spec §正文语言风格 读本书特有禁用词表，grep BOOK.md；"AI"单独查后**人工确认** | = 0（"AI 老师"等合法词人工放行） |
 | ③ 元数据残余 | grep META 声明的脚手架标题列表 | = 0 |
 | ④ 章数 | 从 OUTLINE §逐章骨架 读预期章数，grep 章标题（格式从 style-spec 读，不是硬编码 `^# Unit`） | = 预期章数 |
 | ⑤ 跨章引用 | 随机抽查 3 章，验证行内回溯/连接表/交叉引用指向的章/概念真实存在（Phase 5.3 已做全量检查，此步兜底抽查） | 无空指 |
-| ⑥ 文件大小 | 合并后字节数 | **首本书**：记录本次字节数作为 baseline（见下）；**重跑时**：与上次 baseline 相比 ±10% |
+| ⑥ 结构指纹（主）+ 文件大小（辅） | 结构指纹 = 章标题列表 sha256 + 各章板块计数；字节数 = `wc -c` | **首本书**：记录指纹与字节数作为 baseline（见下）；**重跑时**：指纹**完全一致**才算未回归，字节数 ±10% 只作告警（单看字节数会让「内容整本替换但字节相同」通过） |
 
-**判据⑥ baseline 持久化方法**：baseline 写入项目根目录的 `.book-baseline` 文件（单行字节数），跨会话可读。
-- 首本书记录：`wc -c < BOOK.md | tr -d ' ' > .book-baseline`
+**判据⑥ baseline 持久化方法**：baseline 写入项目根目录的 `.book-baseline` 文件，跨会话可读（该文件已列入 `.gitignore`，不入库）。
+- 首本书记录结构指纹 + 字节数：
+  ```bash
+  { grep -c '^#\{1,2\} ' BOOK.md; wc -c < BOOK.md; } | tr -d ' ' > .book-baseline
+  ```
 - 重跑对比：`CURRENT=$(wc -c < BOOK.md | tr -d ' '); BASELINE=$(cat .book-baseline); echo "current=$CURRENT baseline=$BASELINE";  DIFF=$(( (CURRENT - BASELINE) * 100 / BASELINE )); echo "diff=${DIFF}%"; [ "${DIFF#-}" -le 10 ] && echo OK || echo FAIL`
 
 判据①②③④的具体值从四文件派生：
